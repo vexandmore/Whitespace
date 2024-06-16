@@ -44,7 +44,7 @@ class OutChar(Command):
         super().__init__(line)
 
     def execute(self, stack: array, heap: dict[int, int]) -> None:
-        print(stack.pop(), end="")
+        print(chr(stack.pop()), end="")
     
     def __eq__(self, value: object) -> bool:
         if type(value) == OutChar:
