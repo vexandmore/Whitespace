@@ -1,4 +1,4 @@
-from whitespace import Tokenizer, Token, TokenType
+from whitespace.interpreter import Tokenizer, Token, TokenType
 import unittest
 
 class TestTokenizer(unittest.TestCase):
@@ -6,3 +6,6 @@ class TestTokenizer(unittest.TestCase):
         t = Tokenizer("   \t\n")
         tokens = t.allTokens()
         self.assertEqual(tokens[0], Token(TokenType.SPACE, 1))
+
+if __name__ == "__main__":
+    unittest.main()

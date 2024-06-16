@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class TokenType(Enum):
     TAB = 0
     SPACE = 1
@@ -60,24 +61,14 @@ class Tokenizer():
                     return self.nextToken()
                 else:
                     return Token(type, self.line - 1)
+            else:
+                return self.nextToken()
     
     def allTokens(self) -> list[Token]:
-        out = []
+        out: list[Token] = []
         while True:
             tok = self.nextToken()
             if tok.type == TokenType.EOF:
                 return out
             else:
                 out.append(tok)
-
-
-
-
-def main():
-    with open("text.txt", mode="r") as f:
-        source = f.read()
-    
-
-
-if __name__ == "__main__":
-    main()
