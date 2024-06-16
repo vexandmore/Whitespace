@@ -9,11 +9,11 @@ class TokenType(Enum):
 
     @classmethod
     def fromString(self, s: str):
-        if s == ' ' or '[Space]':
+        if s == ' ' or s == '[Space]':
             return TokenType.SPACE
-        elif s == '\t' or '[Tab]':
+        elif s == '\t' or s == '[Tab]':
             return TokenType.TAB
-        elif s == '\n' or '[LF]':
+        elif s == '\n' or s == '[LF]':
             return TokenType.LINEFEED
         else:
             return None
@@ -23,6 +23,15 @@ class Token():
     def __init__(self, type: TokenType, line: int):
         self.type = type
         self.line = line
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) != Token:
+            return False
+        return self.type == value.type and self.line == value.line
+    
+    def __repr__(self) -> str:
+        return f"Token {self.type} at {self.line}"
+
 
 class Tokenizer():
     def __init__(self, text: str):
@@ -52,17 +61,19 @@ class Tokenizer():
             else:
                 return self.returnNextToken()
         else:
-            if self.text[self.index] in [' ', '\t', '\n']:
-                type = TokenType.fromString(self.text[self.index])
+            lexeme = self.text[self.index]
+
+            if lexeme in [' ', '\t', '\n']:
+                type = TokenType.fromString(lexeme)
                 self.index += 1
-                if self.text[self.index] == '\n':
+                if lexeme == '\n':
                     self.line += 1
-                if type == None:
-                    return self.nextToken()
-                else:
                     return Token(type, self.line - 1)
+                if type == None:
+                    return self.returnNextToken()
+                return Token(type, self.line)
             else:
-                return self.nextToken()
+                return self.returnNextToken()
     
     def allTokens(self) -> list[Token]:
         out: list[Token] = []
