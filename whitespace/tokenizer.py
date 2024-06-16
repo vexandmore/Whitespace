@@ -1,5 +1,5 @@
 from enum import Enum
-
+from whitespace.commands import Command, End, Enum, OutChar, Push
 
 class TokenType(Enum):
     TAB = 0
@@ -33,6 +33,7 @@ class Token():
         return f"Token {self.type} at {self.line}"
 
 
+# In this context, a BasicToken is space, tab, or linefeed
 class Tokenizer():
     def __init__(self, text: str):
         self.text = text

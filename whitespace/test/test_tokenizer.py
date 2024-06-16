@@ -39,6 +39,15 @@ class TestTokenizer(unittest.TestCase):
                       [Token(TokenType.SPACE, 1),Token(TokenType.TAB, 1), Token(TokenType.LINEFEED, 1),
                        Token(TokenType.SPACE, 2), Token(TokenType.SPACE, 2), Token(TokenType.TAB, 2), Token(TokenType.SPACE, 2), Token(TokenType.LINEFEED, 2)])
 
+        self.run_test("[Space][Space]Push[Space]+[Tab][Space]" +
+                      "[Space][Tab][Space][Space][Space][Space][LF]",
+                      [Token(TokenType.SPACE, 1), Token(TokenType.SPACE, 1),
+                       Token(TokenType.SPACE, 1), Token(TokenType.TAB, 1),
+                       Token(TokenType.SPACE, 1), Token(TokenType.SPACE, 1),
+                       Token(TokenType.TAB, 1), Token(TokenType.SPACE, 1),
+                       Token(TokenType.SPACE, 1), Token(TokenType.SPACE, 1),
+                       Token(TokenType.SPACE, 1), Token(TokenType.LINEFEED, 1)])
+        
 
 if __name__ == "__main__":
     unittest.main()
