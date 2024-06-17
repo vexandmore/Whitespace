@@ -1,5 +1,4 @@
-from whitespace.tokenizer import Tokenizer, Token, TokenType
-from whitespace.parser import Command, Push, End, OutChar, Parser
+from whitespace.commands import Push, End, OutChar, OutNum#, ReadChar
 import unittest
 import io
 from array import array
@@ -18,6 +17,35 @@ class TestParser(unittest.TestCase):
         # Assert
         self.assertEqual(ret, None)
         self.assertEqual(file.getvalue(), "a")
+        self.assertEqual(len(stack), 0)
+    
+    # def test_read_char(self):
+    #     # Setup
+    #     file = io.BytesIO(b"a")
+    #     read_char = ReadChar(1, file)
+    #     stack = array('b')
+
+    #     # Run
+    #     ret = read_char.execute(stack, {})
+
+    #     # Assert
+    #     self.assertEqual(ret, None)
+    #     self.assertEqual(len(stack), 1)
+    #     self.assertEqual(stack[0], 97)
+    
+    def test_out_num(self):
+        # Setup
+        file = io.StringIO("")
+        out_char = OutNum(1, file)
+        stack = array('b')
+        stack.append(97)
+
+        # Run
+        ret = out_char.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "97")
         self.assertEqual(len(stack), 0)
     
     def test_push(self):

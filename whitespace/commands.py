@@ -61,6 +61,42 @@ class OutChar(Command):
         return f"Outchar on line {self.line}"
 
 
+class OutNum(Command):
+    def __init__(self, line: int, file: TextIO = sys.stdout):
+        self.file = file
+        super().__init__(line)
+
+    def execute(self, stack: array, heap: dict[int, int]) -> None:
+        print(stack.pop(), file=self.file, end="")
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == OutChar:
+            return super().__eq__(value)
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Outnum on line {self.line}"
+
+
+# class ReadChar(Command):
+#     def __init__(self, line: int, file: TextIO = sys.stdin):
+#         self.file = file
+#         super().__init__(line)
+
+#     def execute(self, stack: array, heap: dict[int, int]) -> None:
+#         stack.append(self.file.read())
+    
+#     def __eq__(self, value: object) -> bool:
+#         if type(value) == OutChar:
+#             return super().__eq__(value)
+#         else:
+#             return False
+
+#     def __repr__(self) -> str:
+#         return f"Inchar on line {self.line}"
+
+
 class End(Command):
     def __init__(self, line: int):
         super().__init__(line)
