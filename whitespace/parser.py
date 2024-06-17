@@ -1,5 +1,5 @@
 from whitespace.tokenizer import Tokenizer, TokenType
-from whitespace.commands import Command, End, OutChar, Push
+from whitespace.commands import Command, End, Push, OutChar
 
 
 class Parser(Tokenizer):

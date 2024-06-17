@@ -1,14 +1,18 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 from array import array
-
+from typing import TextIO
+import sys
 
 class Command(ABC):
     def __init__(self, line: int):
         self.line = line
 
+    # Return either None, or index of where to jump to next.
+    # At end of program, returns -1.
+    # Can throw a StackError or a HeapError
     @abstractmethod
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: dict[int, int]) -> int | None:
         pass
 
     def __repr__(self) -> str:
@@ -40,11 +44,12 @@ class Push(Command):
 
 
 class OutChar(Command):
-    def __init__(self, line: int):
+    def __init__(self, line: int, file: TextIO = sys.stdout):
+        self.file = file
         super().__init__(line)
 
     def execute(self, stack: array, heap: dict[int, int]) -> None:
-        print(chr(stack.pop()), end="")
+        print(chr(stack.pop()), file=self.file, end="")
     
     def __eq__(self, value: object) -> bool:
         if type(value) == OutChar:
@@ -60,8 +65,8 @@ class End(Command):
     def __init__(self, line: int):
         super().__init__(line)
 
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
-        quit() 
+    def execute(self, stack: array, heap: dict[int, int]) -> int | None:
+        return -1
 
     def __repr__(self) -> str:
         return f"End on line {self.line}"

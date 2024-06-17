@@ -1,5 +1,5 @@
 from whitespace.tokenizer import Tokenizer, Token, TokenType
-from whitespace.parser import Command, OutChar, End, Push, Parser
+from whitespace.parser import Command, Push, End, OutChar, Parser
 import unittest
 
 
