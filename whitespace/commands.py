@@ -16,7 +16,7 @@ class Command(ABC):
 
     # Return either None, or index of where to jump to next.
     # At end of program, returns -1.
-    # Can throw a StackError or a HeapError
+    # Can throw a StackError, HeapError, OverflowError
     @abstractmethod
     def execute(self, stack: array, heap: dict[int, int]) -> int | None:
         pass
@@ -153,7 +153,26 @@ class Minus(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Plus on line {self.line}"
+        return f"Minus on line {self.line}"
+
+class Times(Command):
+    def __init__(self, line:int):
+        super().__init__(line)
+    
+    def execute(self, stack: array, heap: dict[int, int]) -> None:
+        if len(stack) < 2:
+            raise StackError("Need two elements to multiply")
+        second, first = (stack.pop(), stack.pop())
+        stack.append(first * second)
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Times:
+            return super().__eq__(value)
+        else:
+            return False
+    
+    def __repr__(self) -> str:
+        return f"Times on line {self.line}"
 
 ######
 # IO #

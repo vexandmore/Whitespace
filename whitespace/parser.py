@@ -1,6 +1,6 @@
 from whitespace.tokenizer import Tokenizer, TokenType
 from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
-from whitespace.commands import Plus, Minus
+from whitespace.commands import Plus, Minus, Times
 
 
 class Parser(Tokenizer):
@@ -133,6 +133,8 @@ class Parser(Tokenizer):
                 return Plus(1)
             elif lookahead.type == TokenType.TAB:
                 return Minus(1)
+            elif lookahead.type == TokenType.LINEFEED:
+                return Times(1)
             else:
                 return None
         else:
