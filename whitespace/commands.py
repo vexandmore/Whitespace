@@ -91,6 +91,25 @@ class Swap(Command):
     
     def __repr__(self) -> str:
         return f"Swap on line {self.line}"
+
+
+class Discard(Command):
+    def __init__(self, line:int):
+        super().__init__(line)
+    
+    def execute(self, stack: array, heap: dict[int, int]) -> None:
+        if len(stack) == 0:
+            raise StackError("Cannot discard on empty stack")
+        stack.pop()
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Discard:
+            return super().__eq__(value)
+        else:
+            return False
+    
+    def __repr__(self) -> str:
+        return f"Discard on line {self.line}"
     
 # Copy and slide: not implemented yet
 

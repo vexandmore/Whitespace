@@ -1,4 +1,4 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, ReadNum, Duplicate, StackError, Swap
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, ReadNum, Duplicate, StackError, Swap, Discard
 import unittest
 import io
 from array import array
@@ -138,6 +138,42 @@ class TestParser(unittest.TestCase):
         self.assertEqual(stack[0], 24)
         self.assertEqual(stack[1], 44)
         self.assertEqual(stack[2], 78)
+    
+    def test_swap_throws(self):
+        # Setup
+        file = io.StringIO("")
+        swap = Swap(1)
+        stack = array('b')
+        
+        # Run and Assert
+        self.assertRaises(StackError, lambda: swap.execute(stack, {}))
+
+
+    def test_discard(self):
+        # Setup
+        file = io.StringIO("")
+        discard = Discard(1)
+        stack = array('b')
+        stack.append(24)
+        stack.append(78)
+        
+        # Run
+        ret = discard.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(stack), 1)
+        self.assertEqual(stack[0], 24)
+    
+    def test_discard_throws(self):
+        # Setup
+        file = io.StringIO("")
+        discard = Discard(1)
+        stack = array('b')
+        
+        # Run and Assert
+        self.assertRaises(StackError, lambda: discard.execute(stack, {}))
 
 
     ################
