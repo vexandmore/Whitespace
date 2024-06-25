@@ -1,6 +1,6 @@
 from whitespace.tokenizer import Tokenizer, Token, TokenType
 from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
-from whitespace.parser import Plus
+from whitespace.parser import Plus, Minus
 import unittest
 
 
@@ -47,6 +47,7 @@ class TestParser(unittest.TestCase):
 
     def test_arithmetic(self):
         self.run_test("[Tab][Space][Space][Space]", [Plus(1)])
+        self.run_test("[Tab][Space][Space][Tab]", [Minus(1)])
 
 if __name__ == "__main__":
     unittest.main()

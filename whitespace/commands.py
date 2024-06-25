@@ -124,7 +124,7 @@ class Plus(Command):
     def execute(self, stack: array, heap: dict[int, int]) -> None:
         if len(stack) < 2:
             raise StackError("Need two elements to add")
-        first, second = (stack.pop(), stack.pop())
+        second, first = (stack.pop(), stack.pop())
         stack.append(first + second)
 
     def __eq__(self, value: object) -> bool:
@@ -134,7 +134,26 @@ class Plus(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Discard on line {self.line}"
+        return f"Plus on line {self.line}"
+
+class Minus(Command):
+    def __init__(self, line:int):
+        super().__init__(line)
+    
+    def execute(self, stack: array, heap: dict[int, int]) -> None:
+        if len(stack) < 2:
+            raise StackError("Need two elements to subtract")
+        second, first = (stack.pop(), stack.pop())
+        stack.append(first - second)
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Minus:
+            return super().__eq__(value)
+        else:
+            return False
+    
+    def __repr__(self) -> str:
+        return f"Plus on line {self.line}"
 
 ######
 # IO #
