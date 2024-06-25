@@ -4,6 +4,12 @@ from array import array
 from typing import TextIO
 import sys
 
+class StackError(Exception):
+    pass
+
+class HeapError(Exception):
+    pass
+
 class Command(ABC):
     def __init__(self, line: int):
         self.line = line
@@ -24,7 +30,9 @@ class Command(ABC):
         else:
             return False
 
-
+######################
+# Stack Manipulation #
+######################
 class Push(Command):
     def __init__(self, line:int, num: int):
         super().__init__(line)
@@ -43,12 +51,38 @@ class Push(Command):
         return f"Push {self.num} line {self.line}"
 
 
+class Duplicate(Command):
+    def __init__(self, line:int):
+        super().__init__(line)
+    
+    def execute(self, stack: array, heap: dict[int, int]) -> None:
+        if len(stack) == 0:
+            raise StackError("Empty stack")
+        
+        stack.append(stack[-1])
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Duplicate:
+            return super().__eq__(value)
+        else:
+            return False
+    
+    def __repr__(self) -> str:
+        return f"Duplicate on line {self.line}"
+
+######
+# IO #
+######
+
 class OutChar(Command):
     def __init__(self, line: int, file: TextIO = sys.stdout):
         self.file = file
         super().__init__(line)
 
     def execute(self, stack: array, heap: dict[int, int]) -> None:
+        if len(stack) == 0:
+            raise StackError("Empty stack")
+
         print(chr(stack.pop()), file=self.file, end="")
     
     def __eq__(self, value: object) -> bool:
@@ -67,6 +101,9 @@ class OutNum(Command):
         super().__init__(line)
 
     def execute(self, stack: array, heap: dict[int, int]) -> None:
+        if len(stack) == 0:
+            raise StackError("Empty stack")
+
         print(stack.pop(), file=self.file, end="")
     
     def __eq__(self, value: object) -> bool:
@@ -117,6 +154,9 @@ class ReadNum(Command):
     def __repr__(self) -> str:
         return f"Inchar on line {self.line}"
 
+################
+# Control Flow #
+################
 
 class End(Command):
     def __init__(self, line: int):

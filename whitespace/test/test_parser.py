@@ -1,5 +1,5 @@
 from whitespace.tokenizer import Tokenizer, Token, TokenType
-from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar
+from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar, Duplicate
 import unittest
 
 
@@ -33,6 +33,11 @@ class TestParser(unittest.TestCase):
                       "[Tab][Tab][LF][Tab][Space][Tab][LF][Tab][Tab]",
                       [OutChar(1), OutNum(1), ReadChar(1), ReadNum(1)])
         
+    def test_stack_manip(self):
+        self.run_test("[Space][LF][Space]", [Duplicate(1)])
+        
+        self.run_test("[Tab][LF][Space][Space][Space][LF][Space]",
+                [OutChar(1), Duplicate(1)])
 
 
 if __name__ == "__main__":

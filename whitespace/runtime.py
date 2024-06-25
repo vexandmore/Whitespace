@@ -4,6 +4,7 @@ from array import array
 def execute(source: str) -> None:
     p = Parser(source)
     program = p.allCommands()
+    print(f"Program: {program}")
 
     stack = array('b')
     heap: dict[int, int] = {}
