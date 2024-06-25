@@ -1,5 +1,5 @@
 from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
-from whitespace.parser import Plus, Minus, Times, IntDivide
+from whitespace.parser import Plus, Minus, Times, IntDivide, Modulo
 import unittest
 
 
@@ -49,6 +49,14 @@ class TestParser(unittest.TestCase):
         self.run_test("\n\n\n[Tab][Space][Space][Tab]", [Minus(4)])
         self.run_test("[Tab][Space][Space][LF]", [Times(1)])
         self.run_test("\n[Tab][Space][Tab][Space]", [IntDivide(2)])
+        self.run_test("\n\n[Tab][Space][Tab][Tab]", [Modulo(3)])
+
+        self.run_test("[Tab][Space][Space][Space]\n"
+                    + "[Tab][Space][Space][Tab]\n"
+                    + "[Tab][Space][Space][LF]\n"
+                    + "[Tab][Space][Tab][Space]\n"
+                    + "[Tab][Space][Tab][Tab]", 
+                    [Plus(1), Minus(2), Times(3), IntDivide(4), Modulo(5)])
 
 if __name__ == "__main__":
     unittest.main()

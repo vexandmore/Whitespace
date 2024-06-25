@@ -1,4 +1,4 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
 from whitespace.commands import ReadNum, Duplicate, StackError, Swap, Discard
 import unittest
 import io
@@ -284,6 +284,34 @@ class TestParser(unittest.TestCase):
         
         # Run and Assert
         self.assertRaises(StackError, lambda: div.execute(stack, {}))
+    
+
+    def test_modulo(self):
+        # Setup
+        file = io.StringIO("")
+        mod = Modulo(1)
+        stack = array('b')
+        stack.append(10)
+        stack.append(3)
+        
+        # Run
+        ret = mod.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(stack), 1)
+        self.assertEqual(stack[0], 1)
+
+    def test_mod_throws(self):
+        # Setup
+        file = io.StringIO("")
+        mod = Modulo(1)
+        stack = array('b')
+        stack.append(34) # need two for div
+        
+        # Run and Assert
+        self.assertRaises(StackError, lambda: mod.execute(stack, {}))
 
     ################
     # Control Flow #

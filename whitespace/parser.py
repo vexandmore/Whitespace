@@ -1,6 +1,6 @@
 from whitespace.tokenizer import Tokenizer, TokenType
 from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
-from whitespace.commands import Plus, Minus, Times, IntDivide
+from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo
 
 
 class Parser(Tokenizer):
@@ -142,6 +142,8 @@ class Parser(Tokenizer):
 
             if lookahead.type == TokenType.SPACE:
                 return IntDivide(lookahead.line)
+            elif lookahead.type == TokenType.TAB:
+                return Modulo(lookahead.line)
             else:
                 return None
         else:
