@@ -1,5 +1,5 @@
 from whitespace.tokenizer import Tokenizer, TokenType
-from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate
+from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap
 
 
 class Parser(Tokenizer):
@@ -44,6 +44,8 @@ class Parser(Tokenizer):
             lookahead = self.nextToken()
             if lookahead.type == TokenType.SPACE:
                 return Duplicate(lookahead.line)
+            elif lookahead.type == TokenType.TAB:
+                return Swap(lookahead.line)
             else:
                 return None
         else:

@@ -1,4 +1,4 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, ReadNum, Duplicate, StackError
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, ReadNum, Duplicate, StackError, Swap
 import unittest
 import io
 from array import array
@@ -116,6 +116,27 @@ class TestParser(unittest.TestCase):
         self.assertEqual(len(stack), 3)
         self.assertEqual(stack[0], 24)
         self.assertEqual(stack[1], 78)
+        self.assertEqual(stack[2], 78)
+    
+
+    def test_swap(self):
+        # Setup
+        file = io.StringIO("")
+        swap = Swap(1)
+        stack = array('b')
+        stack.append(24)
+        stack.append(78)
+        stack.append(44)
+        
+        # Run
+        ret = swap.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(stack), 3)
+        self.assertEqual(stack[0], 24)
+        self.assertEqual(stack[1], 44)
         self.assertEqual(stack[2], 78)
 
 
