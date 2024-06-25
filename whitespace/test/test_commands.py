@@ -1,4 +1,4 @@
-from whitespace.commands import Push, End, OutChar, OutNum#, ReadChar
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar
 import unittest
 import io
 from array import array
@@ -19,19 +19,21 @@ class TestParser(unittest.TestCase):
         self.assertEqual(file.getvalue(), "a")
         self.assertEqual(len(stack), 0)
     
-    # def test_read_char(self):
-    #     # Setup
-    #     file = io.BytesIO(b"a")
-    #     read_char = ReadChar(1, file)
-    #     stack = array('b')
+    def test_read_char(self):
+        # Setup
+        file = io.BytesIO(b"a")
+        read_char = ReadChar(1, file)
+        stack = array('b')
+        stack.append(98)
 
-    #     # Run
-    #     ret = read_char.execute(stack, {})
+        # Run
+        ret = read_char.execute(stack, {})
 
-    #     # Assert
-    #     self.assertEqual(ret, None)
-    #     self.assertEqual(len(stack), 1)
-    #     self.assertEqual(stack[0], 97)
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(len(stack), 2)
+        self.assertEqual(stack[0], 98)
+        self.assertEqual(stack[1], 97)
     
     def test_out_num(self):
         # Setup
