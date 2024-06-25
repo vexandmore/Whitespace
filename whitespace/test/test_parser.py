@@ -1,5 +1,5 @@
 from whitespace.tokenizer import Tokenizer, Token, TokenType
-from whitespace.parser import Command, Push, End, OutChar, Parser
+from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar
 import unittest
 
 
@@ -21,6 +21,18 @@ class TestParser(unittest.TestCase):
                       "[Space][Tab][Space][Space][Space][LF]\n" +
                       "[Tab][LF][Space][Space]\n" + 
                       "[LF][LF][LF]", [Push(1, 72), OutChar(2), End(3)])
+    
+    def test_io(self):
+        self.run_test("[Tab][LF][Space][Space]", [OutChar(1)])
+        self.run_test("[Tab][LF][Space][Tab]", [OutNum(1)])
+        self.run_test("[Tab][LF][Tab][Space]", [ReadChar(1)])
+        self.run_test("[Tab][LF][Tab][Tab]", [ReadNum(1)])
+
+
+        self.run_test("[Tab][LF][Space][Space][Tab][LF][Space]" + 
+                      "[Tab][Tab][LF][Tab][Space][Tab][LF][Tab][Tab]",
+                      [OutChar(1), OutNum(1), ReadChar(1), ReadNum(1)])
+        
 
 
 if __name__ == "__main__":

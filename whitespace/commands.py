@@ -70,7 +70,7 @@ class OutNum(Command):
         print(stack.pop(), file=self.file, end="")
     
     def __eq__(self, value: object) -> bool:
-        if type(value) == OutChar:
+        if type(value) == OutNum:
             return super().__eq__(value)
         else:
             return False
@@ -89,7 +89,27 @@ class ReadChar(Command):
         stack.append(read_byte)
     
     def __eq__(self, value: object) -> bool:
-        if type(value) == OutChar:
+        if type(value) == ReadChar:
+            return super().__eq__(value)
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Inchar on line {self.line}"
+    
+
+class ReadNum(Command):
+    def __init__(self, line: int, file: TextIO = sys.stdin):
+        self.file = file
+        super().__init__(line)
+
+    def execute(self, stack: array, heap: dict[int, int]) -> None:
+        line = self.file.readline()
+        read_int = int(line)
+        stack.append(read_int)
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == ReadNum:
             return super().__eq__(value)
         else:
             return False

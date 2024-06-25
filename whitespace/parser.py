@@ -1,5 +1,5 @@
 from whitespace.tokenizer import Tokenizer, TokenType
-from whitespace.commands import Command, End, Push, OutChar
+from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum
 
 
 class Parser(Tokenizer):
@@ -95,6 +95,17 @@ class Parser(Tokenizer):
 
             if lookahead.type == TokenType.SPACE:
                 return OutChar(lookahead.line)
+            elif lookahead.type == TokenType.TAB:
+                return OutNum(lookahead.line)
+            else:
+                return None
+        elif lookahead.type == TokenType.TAB:
+            lookahead = self.nextToken()
+
+            if lookahead.type == TokenType.SPACE:
+                return ReadChar(lookahead.line)
+            elif lookahead.type == TokenType.TAB:
+                return ReadNum(lookahead.line)
             else:
                 return None
         else:

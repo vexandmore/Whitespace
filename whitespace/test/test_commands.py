@@ -1,33 +1,35 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, ReadNum
 import unittest
 import io
 from array import array
 
 class TestParser(unittest.TestCase):
-    def test_out_char(self):
+    def test_read_num(self):
         # Setup
-        file = io.StringIO("")
-        out_char = OutChar(1, file)
-        stack = array('b')
-        stack.append(97)
-
-        # Run
-        ret = out_char.execute(stack, {})
-
-        # Assert
-        self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "a")
-        self.assertEqual(len(stack), 0)
-    
-    def test_read_char(self):
-        # Setup
-        file = io.BytesIO(b"a")
-        read_char = ReadChar(1, file)
+        file = io.BytesIO(b"  \t 103\n")
+        read_num = ReadNum(1, file)
         stack = array('b')
         stack.append(98)
 
         # Run
-        ret = read_char.execute(stack, {})
+        ret = read_num.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(len(stack), 2)
+        self.assertEqual(stack[0], 98)
+        self.assertEqual(stack[1], 103)
+    
+
+    def test_read_char(self):
+        # Setup
+        file = io.BytesIO(b"a")
+        read_num = ReadChar(1, file)
+        stack = array('b')
+        stack.append(98)
+
+        # Run
+        ret = read_num.execute(stack, {})
 
         # Assert
         self.assertEqual(ret, None)
@@ -48,6 +50,22 @@ class TestParser(unittest.TestCase):
         # Assert
         self.assertEqual(ret, None)
         self.assertEqual(file.getvalue(), "97")
+        self.assertEqual(len(stack), 0)
+
+
+    def test_out_char(self):
+        # Setup
+        file = io.StringIO("")
+        out_char = OutChar(1, file)
+        stack = array('b')
+        stack.append(97)
+
+        # Run
+        ret = out_char.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "a")
         self.assertEqual(len(stack), 0)
     
     def test_push(self):
