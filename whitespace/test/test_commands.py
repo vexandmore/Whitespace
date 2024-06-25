@@ -1,4 +1,5 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, ReadNum, Duplicate, StackError, Swap, Discard
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus
+from whitespace.commands import ReadNum, Duplicate, StackError, Swap, Discard
 import unittest
 import io
 from array import array
@@ -175,6 +176,32 @@ class TestParser(unittest.TestCase):
         # Run and Assert
         self.assertRaises(StackError, lambda: discard.execute(stack, {}))
 
+    def test_plus(self):
+        # Setup
+        file = io.StringIO("")
+        plus = Plus(1)
+        stack = array('b')
+        stack.append(24)
+        stack.append(78)
+        
+        # Run
+        ret = plus.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(stack), 1)
+        self.assertEqual(stack[0], 24 + 78)
+
+    def test_plus_throws(self):
+        # Setup
+        file = io.StringIO("")
+        plus = Plus(1)
+        stack = array('b')
+        stack.append(34) # need two for plus
+        
+        # Run and Assert
+        self.assertRaises(StackError, lambda: plus.execute(stack, {}))
 
     ################
     # Control Flow #

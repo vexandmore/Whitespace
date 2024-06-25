@@ -1,5 +1,6 @@
 from whitespace.tokenizer import Tokenizer, TokenType
 from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
+from whitespace.commands import Plus
 
 
 class Parser(Tokenizer):
@@ -122,8 +123,19 @@ class Parser(Tokenizer):
             return None
     
 
-    def parseArith(self) -> Command:
-        return End(1)
+    def parseArith(self) -> Command | None:
+        lookahead = self.nextToken()
+
+        if lookahead.type == TokenType.SPACE:
+            lookahead = self.nextToken()
+            
+            if lookahead.type == TokenType.SPACE:
+                return Plus(1)
+            else:
+                return None
+        else:
+            return None
+            
     
 
     def parseHeap(self) -> Command:
