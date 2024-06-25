@@ -1,4 +1,4 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times
+from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide
 from whitespace.commands import ReadNum, Duplicate, StackError, Swap, Discard
 import unittest
 import io
@@ -257,6 +257,33 @@ class TestParser(unittest.TestCase):
         
         # Run and Assert
         self.assertRaises(StackError, lambda: times.execute(stack, {}))
+    
+    def test_int_divide(self):
+        # Setup
+        file = io.StringIO("")
+        div = IntDivide(1)
+        stack = array('b')
+        stack.append(10)
+        stack.append(3)
+        
+        # Run
+        ret = div.execute(stack, {})
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(stack), 1)
+        self.assertEqual(stack[0], 3)
+
+    def test_int_divide_throws(self):
+        # Setup
+        file = io.StringIO("")
+        div = IntDivide(1)
+        stack = array('b')
+        stack.append(34) # need two for div
+        
+        # Run and Assert
+        self.assertRaises(StackError, lambda: div.execute(stack, {}))
 
     ################
     # Control Flow #

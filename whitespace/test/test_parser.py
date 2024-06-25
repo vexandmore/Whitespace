@@ -1,5 +1,5 @@
 from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
-from whitespace.parser import Plus, Minus, Times
+from whitespace.parser import Plus, Minus, Times, IntDivide
 import unittest
 
 
@@ -45,9 +45,10 @@ class TestParser(unittest.TestCase):
                 [Swap(1), Discard(1), OutChar(1), Duplicate(1)])
 
     def test_arithmetic(self):
-        self.run_test("[Tab][Space][Space][Space]", [Plus(1)])
-        self.run_test("[Tab][Space][Space][Tab]", [Minus(1)])
+        self.run_test("\n[Tab][Space][Space][Space]", [Plus(2)])
+        self.run_test("\n\n\n[Tab][Space][Space][Tab]", [Minus(4)])
         self.run_test("[Tab][Space][Space][LF]", [Times(1)])
+        self.run_test("\n[Tab][Space][Tab][Space]", [IntDivide(2)])
 
 if __name__ == "__main__":
     unittest.main()
