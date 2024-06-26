@@ -6,7 +6,7 @@ def execute(source: str) -> None:
     program = p.allCommands()
     print(f"Program: {program}")
 
-    stack = array('b')
+    stack = array('l')
     heap: dict[int, int] = {}
 
     # No flow control yet

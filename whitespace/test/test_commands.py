@@ -13,7 +13,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.BytesIO(b"  \t 103\n")
         read_num = ReadNum(1, file)
-        stack = array('b')
+        stack = array('l')
         stack.append(98)
 
         # Run
@@ -30,7 +30,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.BytesIO(b"a")
         read_num = ReadChar(1, file)
-        stack = array('b')
+        stack = array('l')
         stack.append(98)
 
         # Run
@@ -46,7 +46,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         out_char = OutNum(1, file)
-        stack = array('b')
+        stack = array('l')
         stack.append(97)
 
         # Run
@@ -62,7 +62,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         out_char = OutChar(1, file)
-        stack = array('b')
+        stack = array('l')
         stack.append(97)
 
         # Run
@@ -80,7 +80,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         push = Push(1, 32)
-        stack = array('b')
+        stack = array('l')
         
         # Run
         ret = push.execute(stack, {})
@@ -95,7 +95,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         duplicate = Duplicate(1)
-        stack = array('b')
+        stack = array('l')
         
         # Run and Assert
         self.assertRaises(StackError, lambda: duplicate.execute(stack, {}))
@@ -104,7 +104,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         duplicate = Duplicate(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(24)
         stack.append(78)
         
@@ -124,7 +124,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         swap = Swap(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(24)
         stack.append(78)
         stack.append(44)
@@ -144,7 +144,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         swap = Swap(1)
-        stack = array('b')
+        stack = array('l')
         
         # Run and Assert
         self.assertRaises(StackError, lambda: swap.execute(stack, {}))
@@ -154,7 +154,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         discard = Discard(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(24)
         stack.append(78)
         
@@ -171,7 +171,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         discard = Discard(1)
-        stack = array('b')
+        stack = array('l')
         
         # Run and Assert
         self.assertRaises(StackError, lambda: discard.execute(stack, {}))
@@ -180,7 +180,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         plus = Plus(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(24)
         stack.append(78)
         
@@ -197,7 +197,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         plus = Plus(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(34) # need two for plus
         
         # Run and Assert
@@ -208,7 +208,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         minus = Minus(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(24)
         stack.append(78)
         
@@ -225,7 +225,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         minus = Minus(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(34) # need two for plus
         
         # Run and Assert
@@ -235,7 +235,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         times = Times(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(8)
         stack.append(3)
         
@@ -252,7 +252,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         times = Times(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(34) # need two for plus
         
         # Run and Assert
@@ -262,7 +262,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         div = IntDivide(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(10)
         stack.append(3)
         
@@ -279,7 +279,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         div = IntDivide(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(34) # need two for div
         
         # Run and Assert
@@ -290,7 +290,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         mod = Modulo(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(10)
         stack.append(3)
         
@@ -307,7 +307,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         mod = Modulo(1)
-        stack = array('b')
+        stack = array('l')
         stack.append(34) # need two for div
         
         # Run and Assert
@@ -320,7 +320,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         end = End(1)
-        stack = array('b')
+        stack = array('l')
         
         # Run
         ret = end.execute(stack, {})
