@@ -1,9 +1,9 @@
-from whitespace.commands import HeapError
+from whitespace.constants_errors import WORD_TYPE, HeapError
 from array import array
 
 class Heap:
     def __init__(self):
-        self.arr = array('l', [0, 0, 0, 0])
+        self.arr = array(WORD_TYPE, [0, 0, 0, 0])
         # Maximum address written to. Used to return an error
         # if tring to read way past what's been written to before.
         self.max_written = -1

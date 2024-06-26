@@ -1,5 +1,5 @@
 from enum import Enum
-from whitespace.commands import Command, End, Enum, Push, Push
+
 
 class TokenType(Enum):
     TAB = 0

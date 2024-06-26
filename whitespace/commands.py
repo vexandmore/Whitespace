@@ -1,14 +1,11 @@
-from enum import Enum
+from whitespace.Heap import Heap
 from abc import ABC, abstractmethod
 from array import array
 from typing import TextIO
 import sys
 
-class StackError(Exception):
-    pass
+from whitespace.constants_errors import StackError
 
-class HeapError(Exception):
-    pass
 
 class Command(ABC):
     def __init__(self, line: int):
@@ -18,7 +15,7 @@ class Command(ABC):
     # At end of program, returns -1.
     # Can throw a StackError, HeapError, OverflowError
     @abstractmethod
-    def execute(self, stack: array, heap: dict[int, int]) -> int | None:
+    def execute(self, stack: array, heap: Heap) -> int | None:
         pass
 
     def __repr__(self) -> str:
@@ -38,7 +35,7 @@ class Push(Command):
         super().__init__(line)
         self.num = num
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         stack.append(self.num)
     
     def __eq__(self, value: object) -> bool:
@@ -55,7 +52,7 @@ class Duplicate(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
             raise StackError("Empty stack")
         
@@ -75,7 +72,7 @@ class Swap(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
             raise StackError("Need two items on the stack to swap")
         
@@ -97,7 +94,7 @@ class Discard(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
             raise StackError("Cannot discard on empty stack")
         stack.pop()
@@ -121,7 +118,7 @@ class Plus(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
             raise StackError("Need two elements to add")
         second, first = (stack.pop(), stack.pop())
@@ -140,7 +137,7 @@ class Minus(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
             raise StackError("Need two elements to subtract")
         second, first = (stack.pop(), stack.pop())
@@ -159,7 +156,7 @@ class Times(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
             raise StackError("Need two elements to multiply")
         second, first = (stack.pop(), stack.pop())
@@ -179,7 +176,7 @@ class IntDivide(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
             raise StackError("Need two elements to int divide")
         second, first = (stack.pop(), stack.pop())
@@ -199,7 +196,7 @@ class Modulo(Command):
     def __init__(self, line:int):
         super().__init__(line)
     
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
             raise StackError("Need two elements to modulo")
         second, first = (stack.pop(), stack.pop())
@@ -223,7 +220,7 @@ class OutChar(Command):
         self.file = file
         super().__init__(line)
 
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
             raise StackError("Empty stack")
 
@@ -244,7 +241,7 @@ class OutNum(Command):
         self.file = file
         super().__init__(line)
 
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
             raise StackError("Empty stack")
 
@@ -265,7 +262,7 @@ class ReadChar(Command):
         self.file = file
         super().__init__(line)
 
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         read_byte = int(self.file.read()[0])
         stack.append(read_byte)
     
@@ -284,7 +281,7 @@ class ReadNum(Command):
         self.file = file
         super().__init__(line)
 
-    def execute(self, stack: array, heap: dict[int, int]) -> None:
+    def execute(self, stack: array, heap: Heap) -> None:
         line = self.file.readline()
         read_int = int(line)
         stack.append(read_int)
@@ -306,7 +303,7 @@ class End(Command):
     def __init__(self, line: int):
         super().__init__(line)
 
-    def execute(self, stack: array, heap: dict[int, int]) -> int | None:
+    def execute(self, stack: array, heap: Heap) -> int | None:
         return -1
 
     def __repr__(self) -> str:

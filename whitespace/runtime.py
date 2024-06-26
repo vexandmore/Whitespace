@@ -1,4 +1,6 @@
+from whitespace.constants_errors import WORD_TYPE
 from whitespace.parser import Parser
+from whitespace.Heap import Heap
 from array import array
 
 def execute(source: str) -> None:
@@ -6,8 +8,8 @@ def execute(source: str) -> None:
     program = p.allCommands()
     print(f"Program: {program}")
 
-    stack = array('l')
-    heap: dict[int, int] = {}
+    stack = array(WORD_TYPE)
+    heap = Heap()
 
     # No flow control yet
     for statement in program:

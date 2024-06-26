@@ -1,5 +1,7 @@
 from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
-from whitespace.commands import ReadNum, Duplicate, StackError, Swap, Discard
+from whitespace.commands import ReadNum, Duplicate, Swap, Discard
+from whitespace.constants_errors import WORD_TYPE
+from whitespace.constants_errors import StackError
 import unittest
 import io
 from array import array
@@ -13,7 +15,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.BytesIO(b"  \t 103\n")
         read_num = ReadNum(1, file)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(98)
 
         # Run
@@ -30,7 +32,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.BytesIO(b"a")
         read_num = ReadChar(1, file)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(98)
 
         # Run
@@ -46,7 +48,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         out_char = OutNum(1, file)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(97)
 
         # Run
@@ -62,7 +64,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         out_char = OutChar(1, file)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(97)
 
         # Run
@@ -80,7 +82,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         push = Push(1, 32)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         
         # Run
         ret = push.execute(stack, {})
@@ -95,7 +97,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         duplicate = Duplicate(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         
         # Run and Assert
         self.assertRaises(StackError, lambda: duplicate.execute(stack, {}))
@@ -104,7 +106,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         duplicate = Duplicate(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(24)
         stack.append(78)
         
@@ -124,7 +126,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         swap = Swap(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(24)
         stack.append(78)
         stack.append(44)
@@ -144,7 +146,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         swap = Swap(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         
         # Run and Assert
         self.assertRaises(StackError, lambda: swap.execute(stack, {}))
@@ -154,7 +156,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         discard = Discard(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(24)
         stack.append(78)
         
@@ -171,7 +173,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         discard = Discard(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         
         # Run and Assert
         self.assertRaises(StackError, lambda: discard.execute(stack, {}))
@@ -180,7 +182,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         plus = Plus(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(24)
         stack.append(78)
         
@@ -197,7 +199,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         plus = Plus(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(34) # need two for plus
         
         # Run and Assert
@@ -208,7 +210,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         minus = Minus(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(24)
         stack.append(78)
         
@@ -225,7 +227,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         minus = Minus(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(34) # need two for plus
         
         # Run and Assert
@@ -235,7 +237,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         times = Times(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(8)
         stack.append(3)
         
@@ -252,7 +254,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         times = Times(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(34) # need two for plus
         
         # Run and Assert
@@ -262,7 +264,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         div = IntDivide(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(10)
         stack.append(3)
         
@@ -279,7 +281,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         div = IntDivide(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(34) # need two for div
         
         # Run and Assert
@@ -290,7 +292,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         mod = Modulo(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(10)
         stack.append(3)
         
@@ -307,7 +309,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         mod = Modulo(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         stack.append(34) # need two for div
         
         # Run and Assert
@@ -320,7 +322,7 @@ class TestParser(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         end = End(1)
-        stack = array('l')
+        stack = array(WORD_TYPE)
         
         # Run
         ret = end.execute(stack, {})

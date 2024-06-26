@@ -1,5 +1,7 @@
-from whitespace.Heap import Heap, HeapError
+from whitespace.Heap import Heap
 import unittest
+
+from whitespace.constants_errors import HeapError
 
 
 class TestHeap(unittest.TestCase):
