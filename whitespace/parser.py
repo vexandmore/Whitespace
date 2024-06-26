@@ -6,6 +6,13 @@ from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo, Read_Heap
 class Parser(Tokenizer):
     def __init__(self, text: str):
         super().__init__(text)
+        self.label = -1
+
+    def get_label(self):
+        label = self.label
+        # Reset current label so only the next instruction has this label
+        self.label = -1
+        return label
 
 
     def allCommands(self) -> list[Command]:
@@ -40,15 +47,15 @@ class Parser(Tokenizer):
     def parseStackManip(self) -> Command | None:
         lookahead = self.nextToken()
         if lookahead.type == TokenType.SPACE:
-            return Push(lookahead.line, self.parseNumber())
+            return Push(lookahead.line, self.parseNumber(), self.get_label())
         elif lookahead.type == TokenType.LINEFEED:
             lookahead = self.nextToken()
             if lookahead.type == TokenType.SPACE:
-                return Duplicate(lookahead.line)
+                return Duplicate(lookahead.line, self.get_label())
             elif lookahead.type == TokenType.TAB:
-                return Swap(lookahead.line)
+                return Swap(lookahead.line, self.get_label())
             elif lookahead.type == TokenType.LINEFEED:
-                return Discard(lookahead.line)
+                return Discard(lookahead.line, self.get_label())
             else:
                 return None
         else:
@@ -83,6 +90,24 @@ class Parser(Tokenizer):
 
         return out
     
+    def parseLabel(self) -> int:
+        lookahead = self.nextToken()
+        out: int = 0
+
+        # For the label, space is 0, tab is 1 (ends on LF; the LF is consumed)
+        while lookahead.type == TokenType.SPACE or lookahead.type == TokenType.TAB:
+            if lookahead.type == TokenType.SPACE:
+                # Add 0 to number
+                out = out << 1
+            elif lookahead.type == TokenType.TAB:
+                # Add 1 to number
+                out = out << 1
+                out += 1
+
+            lookahead = self.nextToken()
+
+        return out
+    
 
     def parseFlowControl(self) -> Command | None:
         lookahead = self.nextToken()
@@ -91,7 +116,18 @@ class Parser(Tokenizer):
             lookahead = self.nextToken()
 
             if lookahead.type == TokenType.LINEFEED:
-                return End(lookahead.line)
+                return End(lookahead.line, self.get_label())
+            else:
+                return None
+        elif lookahead.type == TokenType.SPACE:
+            lookahead = self.nextToken()
+            
+            if lookahead.type == TokenType.SPACE:
+                # The next part of the source is a label, ending with LF
+                # Will be applied to the next instruction
+                self.label = self.parseLabel()
+                # Recurse to parse next thing
+                return self.nextCommand()
             else:
                 return None
         else:
@@ -105,18 +141,18 @@ class Parser(Tokenizer):
             lookahead = self.nextToken()
 
             if lookahead.type == TokenType.SPACE:
-                return OutChar(lookahead.line)
+                return OutChar(lookahead.line, label=self.get_label())
             elif lookahead.type == TokenType.TAB:
-                return OutNum(lookahead.line)
+                return OutNum(lookahead.line, self.get_label())
             else:
                 return None
         elif lookahead.type == TokenType.TAB:
             lookahead = self.nextToken()
 
             if lookahead.type == TokenType.SPACE:
-                return ReadChar(lookahead.line)
+                return ReadChar(lookahead.line, self.get_label())
             elif lookahead.type == TokenType.TAB:
-                return ReadNum(lookahead.line)
+                return ReadNum(lookahead.line, self.get_label())
             else:
                 return None
         else:
@@ -130,20 +166,20 @@ class Parser(Tokenizer):
             lookahead = self.nextToken()
             
             if lookahead.type == TokenType.SPACE:
-                return Plus(lookahead.line)
+                return Plus(lookahead.line, self.get_label())
             elif lookahead.type == TokenType.TAB:
-                return Minus(lookahead.line)
+                return Minus(lookahead.line, self.get_label())
             elif lookahead.type == TokenType.LINEFEED:
-                return Times(lookahead.line)
+                return Times(lookahead.line, self.get_label())
             else:
                 return None
         elif lookahead.type == TokenType.TAB:
             lookahead = self.nextToken()
 
             if lookahead.type == TokenType.SPACE:
-                return IntDivide(lookahead.line)
+                return IntDivide(lookahead.line, self.get_label())
             elif lookahead.type == TokenType.TAB:
-                return Modulo(lookahead.line)
+                return Modulo(lookahead.line, self.get_label())
             else:
                 return None
         else:
@@ -154,8 +190,8 @@ class Parser(Tokenizer):
         lookahead = self.nextToken()
 
         if lookahead.type == TokenType.SPACE:
-            return Write_Heap(lookahead.line)
+            return Write_Heap(lookahead.line, self.get_label())
         elif lookahead.type == TokenType.TAB:
-            return Read_Heap(lookahead.line)
+            return Read_Heap(lookahead.line, self.get_label())
         else:
             return None

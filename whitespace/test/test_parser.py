@@ -67,6 +67,15 @@ class TestParser(unittest.TestCase):
                     + "[Tab][Tab][Space]\n"
                     + "[Tab][Tab][Tab]",
                     [Plus(1), Minus(2), Write_Heap(3), Read_Heap(4)])
+    
+
+    def test_labels(self):
+        self.run_test("[LF][Space][Space][Tab][Tab][LF]Label 3 [Tab][Tab][Space]", [Write_Heap(1, 3)])
+        self.run_test("[LF][Space][Space][Tab][Tab][LF]Label 3 [Tab][LF][Space][Space]", [OutChar(1, label=3)])
+        self.run_test("[LF][Space][Space][Tab][Tab][LF]Label 3 [LF][LF][LF]", [End(1, 3)])
+        self.run_test("[LF][Space][Space][Tab][Tab][LF]Label 3" +
+                    "[Space][Space]Push[Space]+[Tab][Space]" +
+                      "[Space][Tab][Space][Space][Space][LF]", [Push(1,72,3)])
 
 
 if __name__ == "__main__":

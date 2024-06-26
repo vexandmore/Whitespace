@@ -8,8 +8,9 @@ from whitespace.constants_errors import StackError
 
 
 class Command(ABC):
-    def __init__(self, line: int):
+    def __init__(self, line: int, label: int = -1):
         self.line = line
+        self.label = label
 
     # Return either None, or index of where to jump to next.
     # At end of program, returns -1.
@@ -19,11 +20,11 @@ class Command(ABC):
         pass
 
     def __repr__(self) -> str:
-        return f"Command on line {self.line}"
+        return f"Command on line {self.line} label {self.label}"
     
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Command):
-            return self.line == value.line
+            return self.line == value.line and self.label == value.label
         else:
             return False
 
@@ -31,8 +32,8 @@ class Command(ABC):
 # Stack Manipulation #
 ######################
 class Push(Command):
-    def __init__(self, line:int, num: int):
-        super().__init__(line)
+    def __init__(self, line:int, num: int, label: int = -1):
+        super().__init__(line, label)
         self.num = num
     
     def execute(self, stack: array, heap: Heap) -> None:
@@ -49,8 +50,8 @@ class Push(Command):
 
 
 class Duplicate(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
@@ -65,12 +66,12 @@ class Duplicate(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Duplicate on line {self.line}"
+        return f"Duplicate on line {self.line} label {self.label}"
 
 
 class Swap(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
@@ -87,12 +88,12 @@ class Swap(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Swap on line {self.line}"
+        return f"Swap on line {self.line} label {self.label}"
 
 
 class Discard(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
@@ -106,7 +107,7 @@ class Discard(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Discard on line {self.line}"
+        return f"Discard on line {self.line} label {self.label}"
     
 # Copy and slide: not implemented yet
 
@@ -115,8 +116,8 @@ class Discard(Command):
 ##############
 
 class Plus(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
@@ -131,11 +132,11 @@ class Plus(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Plus on line {self.line}"
+        return f"Plus on line {self.line} label {self.label}"
 
 class Minus(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
@@ -150,11 +151,11 @@ class Minus(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Minus on line {self.line}"
+        return f"Minus on line {self.line} label {self.label}"
 
 class Times(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
@@ -169,12 +170,12 @@ class Times(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Times on line {self.line}"
+        return f"Times on line {self.line} label {self.label}"
 
 
 class IntDivide(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
@@ -189,12 +190,12 @@ class IntDivide(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"IntDivide on line {self.line}"
+        return f"IntDivide on line {self.line} label {self.label}"
 
 
 class Modulo(Command):
-    def __init__(self, line:int):
-        super().__init__(line)
+    def __init__(self, line:int, label: int = -1):
+        super().__init__(line, label)
     
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) < 2:
@@ -209,16 +210,16 @@ class Modulo(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Modulo on line {self.line}"
+        return f"Modulo on line {self.line} label {self.label}"
 
 ######
 # IO #
 ######
 
 class OutChar(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdout):
+    def __init__(self, line: int, file: TextIO = sys.stdout, label: int = -1):
         self.file = file
-        super().__init__(line)
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
@@ -233,13 +234,13 @@ class OutChar(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Outchar on line {self.line}"
+        return f"Outchar on line {self.line} label {self.label}"
 
 
 class OutNum(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdout):
+    def __init__(self, line: int, file: TextIO = sys.stdout, label: int = -1):
         self.file = file
-        super().__init__(line)
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> None:
         if len(stack) == 0:
@@ -254,13 +255,13 @@ class OutNum(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Outnum on line {self.line}"
+        return f"Outnum on line {self.line} label {self.label}"
 
 
 class ReadChar(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdin):
+    def __init__(self, line: int, file: TextIO = sys.stdin, label: int = -1):
         self.file = file
-        super().__init__(line)
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> None:
         read_byte = int(self.file.read()[0])
@@ -273,13 +274,13 @@ class ReadChar(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Inchar on line {self.line}"
+        return f"Inchar on line {self.line} label {self.label}"
     
 
 class ReadNum(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdin):
+    def __init__(self, line: int, file: TextIO = sys.stdin, label: int = -1):
         self.file = file
-        super().__init__(line)
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> None:
         line = self.file.readline()
@@ -293,15 +294,15 @@ class ReadNum(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Inchar on line {self.line}"
+        return f"Inchar on line {self.line} label {self.label}"
 
 ################
 # Control Flow #
 ################
 
 class End(Command):
-    def __init__(self, line: int):
-        super().__init__(line)
+    def __init__(self, line: int, label: int = -1):
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> int | None:
         return -1
@@ -313,15 +314,15 @@ class End(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"End on line {self.line}"
+        return f"End on line {self.line} label {self.label}"
 
 ########
 # Heap #
 ########
 
 class Read_Heap(Command):
-    def __init__(self, line: int):
-        super().__init__(line)
+    def __init__(self, line: int, label: int = -1):
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> int | None:
         if len(stack) < 1:
@@ -338,11 +339,11 @@ class Read_Heap(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Read heap on line {self.line}"
+        return f"Read heap on line {self.line} label {self.label}"
 
 class Write_Heap(Command):
-    def __init__(self, line: int):
-        super().__init__(line)
+    def __init__(self, line: int, label: int = -1):
+        super().__init__(line, label)
 
     def execute(self, stack: array, heap: Heap) -> int | None:
         if len(stack) < 2:
@@ -359,4 +360,4 @@ class Write_Heap(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Read heap on line {self.line}"
+        return f"Write heap on line {self.line} label {self.label}"
