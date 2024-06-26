@@ -1,6 +1,6 @@
 from whitespace.tokenizer import Tokenizer, TokenType
 from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
-from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo
+from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo, Read_Heap, Write_Heap
 
 
 class Parser(Tokenizer):
@@ -150,6 +150,12 @@ class Parser(Tokenizer):
             return None
             
     
+    def parseHeap(self) -> Command | None:
+        lookahead = self.nextToken()
 
-    def parseHeap(self) -> Command:
-        return End(1)
+        if lookahead.type == TokenType.SPACE:
+            return Write_Heap(lookahead.line)
+        elif lookahead.type == TokenType.TAB:
+            return Read_Heap(lookahead.line)
+        else:
+            return None
