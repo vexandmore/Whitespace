@@ -1,12 +1,12 @@
 from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
-from whitespace.commands import ReadNum, Duplicate, Swap, Discard
-from whitespace.constants_errors import WORD_TYPE
-from whitespace.constants_errors import StackError
+from whitespace.commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap
+from whitespace.constants_errors import WORD_TYPE, StackError
+from whitespace.Heap import Heap
 import unittest
 import io
 from array import array
 
-class TestParser(unittest.TestCase):
+class TestCommands(unittest.TestCase):
 
     ######
     # IO #
@@ -80,7 +80,6 @@ class TestParser(unittest.TestCase):
     ######################
     def test_push(self):
         # Setup
-        file = io.StringIO("")
         push = Push(1, 32)
         stack = array(WORD_TYPE)
         
@@ -89,13 +88,11 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 32)
 
     def test_duplicate_throws(self):
         # Setup
-        file = io.StringIO("")
         duplicate = Duplicate(1)
         stack = array(WORD_TYPE)
         
@@ -104,7 +101,6 @@ class TestParser(unittest.TestCase):
 
     def test_duplicate(self):
         # Setup
-        file = io.StringIO("")
         duplicate = Duplicate(1)
         stack = array(WORD_TYPE)
         stack.append(24)
@@ -115,7 +111,6 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 3)
         self.assertEqual(stack[0], 24)
         self.assertEqual(stack[1], 78)
@@ -124,7 +119,6 @@ class TestParser(unittest.TestCase):
 
     def test_swap(self):
         # Setup
-        file = io.StringIO("")
         swap = Swap(1)
         stack = array(WORD_TYPE)
         stack.append(24)
@@ -136,7 +130,6 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 3)
         self.assertEqual(stack[0], 24)
         self.assertEqual(stack[1], 44)
@@ -144,7 +137,6 @@ class TestParser(unittest.TestCase):
     
     def test_swap_throws(self):
         # Setup
-        file = io.StringIO("")
         swap = Swap(1)
         stack = array(WORD_TYPE)
         
@@ -154,7 +146,6 @@ class TestParser(unittest.TestCase):
 
     def test_discard(self):
         # Setup
-        file = io.StringIO("")
         discard = Discard(1)
         stack = array(WORD_TYPE)
         stack.append(24)
@@ -165,13 +156,11 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24)
     
     def test_discard_throws(self):
         # Setup
-        file = io.StringIO("")
         discard = Discard(1)
         stack = array(WORD_TYPE)
         
@@ -180,7 +169,6 @@ class TestParser(unittest.TestCase):
 
     def test_plus(self):
         # Setup
-        file = io.StringIO("")
         plus = Plus(1)
         stack = array(WORD_TYPE)
         stack.append(24)
@@ -191,13 +179,11 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24 + 78)
 
     def test_plus_throws(self):
         # Setup
-        file = io.StringIO("")
         plus = Plus(1)
         stack = array(WORD_TYPE)
         stack.append(34) # need two for plus
@@ -208,7 +194,6 @@ class TestParser(unittest.TestCase):
 
     def test_minus(self):
         # Setup
-        file = io.StringIO("")
         minus = Minus(1)
         stack = array(WORD_TYPE)
         stack.append(24)
@@ -219,13 +204,11 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24 - 78)
 
     def test_minus_throws(self):
         # Setup
-        file = io.StringIO("")
         minus = Minus(1)
         stack = array(WORD_TYPE)
         stack.append(34) # need two for plus
@@ -235,7 +218,6 @@ class TestParser(unittest.TestCase):
     
     def test_times(self):
         # Setup
-        file = io.StringIO("")
         times = Times(1)
         stack = array(WORD_TYPE)
         stack.append(8)
@@ -246,13 +228,11 @@ class TestParser(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, None)
-        self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24)
 
     def test_times_throws(self):
         # Setup
-        file = io.StringIO("")
         times = Times(1)
         stack = array(WORD_TYPE)
         stack.append(34) # need two for plus
@@ -331,6 +311,60 @@ class TestParser(unittest.TestCase):
         self.assertEqual(ret, -1)
         self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 0)
+    
+    ########
+    # Heap #
+    ########
+    def test_heap_read(self):
+        # Setup
+        readHeap = Read_Heap(1)
+        stack = array(WORD_TYPE)
+        stack.append(3)
+        heap = Heap()
+        heap.write(3, 123)
+
+        # Run
+        ret = readHeap.execute(stack, heap)
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(len(stack), 1)
+        self.assertEqual(stack[0], 123)
+
+    def test_heap_read_throws(self):
+        # Setup
+        heap_read = Read_Heap(1)
+        stack = array(WORD_TYPE)
+        heap = Heap()
+
+        # Run and Assert
+        self.assertRaises(StackError, lambda: heap_read.execute(stack, heap))
+    
+    def test_heap_write(self):
+        # Setup
+        writeHeap = Write_Heap(1)
+        stack = array(WORD_TYPE)
+        stack.append(3)
+        stack.append(123)
+        heap = Heap()
+
+        # Run
+        ret = writeHeap.execute(stack, heap)
+
+        # Assert
+        self.assertEqual(ret, None)
+        self.assertEqual(len(stack), 0)
+        self.assertEqual(heap.read(3), 123)
+
+    def test_heap_write_throws(self):
+        # Setup
+        heap_write = Write_Heap(1)
+        stack = array(WORD_TYPE)
+        heap = Heap()
+
+        # Run and Assert
+        self.assertRaises(StackError, lambda: heap_write.execute(stack, heap))
+
 
 if __name__ == "__main__":
     unittest.main()

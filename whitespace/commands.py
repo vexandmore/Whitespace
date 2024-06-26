@@ -306,5 +306,57 @@ class End(Command):
     def execute(self, stack: array, heap: Heap) -> int | None:
         return -1
 
+    def __eq__(self, value: object) -> bool:
+        if type(value) == End:
+            return super().__eq__(value)
+        else:
+            return False
+
     def __repr__(self) -> str:
         return f"End on line {self.line}"
+
+########
+# Heap #
+########
+
+class Read_Heap(Command):
+    def __init__(self, line: int):
+        super().__init__(line)
+
+    def execute(self, stack: array, heap: Heap) -> int | None:
+        if len(stack) < 1:
+            raise StackError("Need one stack elements to heap read")
+        
+        addr = stack.pop()
+        stack.append(heap.read(addr))
+        return None
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Read_Heap:
+            return super().__eq__(value)
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Read heap on line {self.line}"
+
+class Write_Heap(Command):
+    def __init__(self, line: int):
+        super().__init__(line)
+
+    def execute(self, stack: array, heap: Heap) -> int | None:
+        if len(stack) < 2:
+            raise StackError("Need two elements to heap write")
+        
+        value, addr = (stack.pop(), stack.pop())
+        heap.write(addr, value)
+        return None
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Write_Heap:
+            return super().__eq__(value)
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Read heap on line {self.line}"
