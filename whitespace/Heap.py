@@ -24,3 +24,6 @@ class Heap:
             # Double size, and recurse
             self.arr.extend([0] * len(self.arr))
             self.write(address, value)
+    
+    def __repr__(self) -> str:
+        return f"Heap {self.arr}, max addr is {self.max_written}"

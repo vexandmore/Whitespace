@@ -2,9 +2,21 @@ from whitespace.Heap import Heap
 from abc import ABC, abstractmethod
 from array import array
 from typing import TextIO
+from whitespace.constants_errors import WORD_TYPE
+from whitespace.Heap import Heap
 import sys
 
-from whitespace.constants_errors import StackError
+from whitespace.constants_errors import StackError, CannotFindJumpTarget
+
+class Runtime():
+    def __init__(self, stack: array = array(WORD_TYPE), heap: Heap = Heap(), callstack: array = array(WORD_TYPE), PC: int = 0):
+        self.stack = stack
+        self.heap = heap
+        self.callstack = callstack
+        self.PC = PC
+    
+    def __repr__(self) -> str:
+        return f"Runtime, stack {self.stack} heap {self.heap} callstack {self.callstack} PC {self.PC}"
 
 
 class Command(ABC):
@@ -16,7 +28,7 @@ class Command(ABC):
     # At end of program, returns -1.
     # Can throw a StackError, HeapError, OverflowError
     @abstractmethod
-    def execute(self, stack: array, heap: Heap) -> int | None:
+    def execute(self, runtime: Runtime) -> int | None:
         pass
 
     def __repr__(self) -> str:
@@ -29,15 +41,15 @@ class Command(ABC):
             return False
 
 ######################
-# Stack Manipulation #
+# runtime.stack Manipulation #
 ######################
 class Push(Command):
     def __init__(self, line:int, num: int, label: int = -1):
         super().__init__(line, label)
         self.num = num
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        stack.append(self.num)
+    def execute(self, runtime: Runtime) -> None:
+        runtime.stack.append(self.num)
     
     def __eq__(self, value: object) -> bool:
         if type(value) == Push:
@@ -53,11 +65,11 @@ class Duplicate(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) == 0:
-            raise StackError("Empty stack")
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) == 0:
+            raise StackError("Empty runtime.stack")
         
-        stack.append(stack[-1])
+        runtime.stack.append(runtime.stack[-1])
     
     def __eq__(self, value: object) -> bool:
         if type(value) == Duplicate:
@@ -73,13 +85,13 @@ class Swap(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) < 2:
-            raise StackError("Need two items on the stack to swap")
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) < 2:
+            raise StackError("Need two items on the runtime.stack to swap")
         
-        top, second = (stack.pop(), stack.pop())
-        stack.append(top)
-        stack.append(second)
+        top, second = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.stack.append(top)
+        runtime.stack.append(second)
     
     def __eq__(self, value: object) -> bool:
         if type(value) == Swap:
@@ -95,10 +107,10 @@ class Discard(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) == 0:
-            raise StackError("Cannot discard on empty stack")
-        stack.pop()
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) == 0:
+            raise StackError("Cannot discard on empty runtime.stack")
+        runtime.stack.pop()
 
     def __eq__(self, value: object) -> bool:
         if type(value) == Discard:
@@ -119,11 +131,11 @@ class Plus(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) < 2:
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) < 2:
             raise StackError("Need two elements to add")
-        second, first = (stack.pop(), stack.pop())
-        stack.append(first + second)
+        second, first = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.stack.append(first + second)
 
     def __eq__(self, value: object) -> bool:
         if type(value) == Plus:
@@ -138,11 +150,11 @@ class Minus(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) < 2:
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) < 2:
             raise StackError("Need two elements to subtract")
-        second, first = (stack.pop(), stack.pop())
-        stack.append(first - second)
+        second, first = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.stack.append(first - second)
 
     def __eq__(self, value: object) -> bool:
         if type(value) == Minus:
@@ -157,11 +169,11 @@ class Times(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) < 2:
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) < 2:
             raise StackError("Need two elements to multiply")
-        second, first = (stack.pop(), stack.pop())
-        stack.append(first * second)
+        second, first = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.stack.append(first * second)
 
     def __eq__(self, value: object) -> bool:
         if type(value) == Times:
@@ -177,11 +189,11 @@ class IntDivide(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) < 2:
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) < 2:
             raise StackError("Need two elements to int divide")
-        second, first = (stack.pop(), stack.pop())
-        stack.append(first // second)
+        second, first = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.stack.append(first // second)
 
     def __eq__(self, value: object) -> bool:
         if type(value) == IntDivide:
@@ -197,11 +209,11 @@ class Modulo(Command):
     def __init__(self, line:int, label: int = -1):
         super().__init__(line, label)
     
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) < 2:
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) < 2:
             raise StackError("Need two elements to modulo")
-        second, first = (stack.pop(), stack.pop())
-        stack.append(first % second)
+        second, first = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.stack.append(first % second)
 
     def __eq__(self, value: object) -> bool:
         if type(value) == Modulo:
@@ -221,11 +233,11 @@ class OutChar(Command):
         self.file = file
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) == 0:
-            raise StackError("Empty stack")
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) == 0:
+            raise StackError("Empty runtime.stack")
 
-        print(chr(stack.pop()), file=self.file, end="")
+        print(chr(runtime.stack.pop()), file=self.file, end="")
     
     def __eq__(self, value: object) -> bool:
         if type(value) == OutChar:
@@ -242,11 +254,11 @@ class OutNum(Command):
         self.file = file
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> None:
-        if len(stack) == 0:
-            raise StackError("Empty stack")
+    def execute(self, runtime: Runtime) -> None:
+        if len(runtime.stack) == 0:
+            raise StackError("Empty runtime.stack")
 
-        print(stack.pop(), file=self.file, end="")
+        print(runtime.stack.pop(), file=self.file, end="")
     
     def __eq__(self, value: object) -> bool:
         if type(value) == OutNum:
@@ -263,9 +275,9 @@ class ReadChar(Command):
         self.file = file
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> None:
+    def execute(self, runtime: Runtime) -> None:
         read_byte = int(self.file.read()[0])
-        stack.append(read_byte)
+        runtime.stack.append(read_byte)
     
     def __eq__(self, value: object) -> bool:
         if type(value) == ReadChar:
@@ -282,10 +294,10 @@ class ReadNum(Command):
         self.file = file
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> None:
+    def execute(self, runtime: Runtime) -> None:
         line = self.file.readline()
         read_int = int(line)
-        stack.append(read_int)
+        runtime.stack.append(read_int)
     
     def __eq__(self, value: object) -> bool:
         if type(value) == ReadNum:
@@ -304,7 +316,7 @@ class End(Command):
     def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> int | None:
+    def execute(self, runtime: Runtime) -> int | None:
         return -1
 
     def __eq__(self, value: object) -> bool:
@@ -316,6 +328,48 @@ class End(Command):
     def __repr__(self) -> str:
         return f"End on line {self.line} label {self.label}"
 
+
+class CallSub(Command):
+    def __init__(self, line: int, target_label: int, label: int = -1):
+        self.target_label = target_label
+        self.target_pc = -1 # Will be the target program counter
+        super().__init__(line, label)
+
+    def execute(self, runtime: Runtime) -> int | None:
+        if self.target_pc != -1:
+            runtime.callstack.append(runtime.PC)
+            return self.target_pc
+        else:
+            raise CannotFindJumpTarget("This node was not visited, doesn't have the target PC")
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == CallSub:
+            return super().__eq__(value) and self.target_label == value.target_label and self.target_pc == value.target_pc
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Callsub on line {self.line} label {self.label}, target label {self.target_label}, PC {self.target_pc}"
+
+
+class EndSub(Command):
+    def __init__(self, line: int, label: int = -1):
+        super().__init__(line, label)
+
+    def execute(self, runtime: Runtime) -> int | None:
+        if len(runtime.callstack) == 0:
+            raise StackError("Callstack is empty, yet a end subroutine is desired")
+        return runtime.callstack.pop()
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == EndSub:
+            return super().__eq__(value)
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Endsub on line {self.line} label {self.label}"
+
 ########
 # Heap #
 ########
@@ -324,12 +378,12 @@ class Read_Heap(Command):
     def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> int | None:
-        if len(stack) < 1:
-            raise StackError("Need one stack elements to heap read")
+    def execute(self, runtime: Runtime) -> int | None:
+        if len(runtime.stack) < 1:
+            raise StackError("Need one runtime.stack elements to heap read")
         
-        addr = stack.pop()
-        stack.append(heap.read(addr))
+        addr = runtime.stack.pop()
+        runtime.stack.append(runtime.heap.read(addr))
         return None
     
     def __eq__(self, value: object) -> bool:
@@ -345,12 +399,12 @@ class Write_Heap(Command):
     def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
-    def execute(self, stack: array, heap: Heap) -> int | None:
-        if len(stack) < 2:
+    def execute(self, runtime: Runtime) -> int | None:
+        if len(runtime.stack) < 2:
             raise StackError("Need two elements to heap write")
         
-        value, addr = (stack.pop(), stack.pop())
-        heap.write(addr, value)
+        value, addr = (runtime.stack.pop(), runtime.stack.pop())
+        runtime.heap.write(addr, value)
         return None
     
     def __eq__(self, value: object) -> bool:

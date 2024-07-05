@@ -1,17 +1,22 @@
 from whitespace.constants_errors import WORD_TYPE
 from whitespace.parser import Parser
-from whitespace.Heap import Heap
-from array import array
+from whitespace.commands import Runtime
+from whitespace.visitor import visit_flow_control
 
 def execute(source: str) -> None:
     p = Parser(source)
     program = p.allCommands()
+    visit_flow_control(program)
     print(f"Program: {program}")
 
-    stack = array(WORD_TYPE)
-    heap = Heap()
+    runtime = Runtime()
 
     # No flow control yet
-    for statement in program:
-        statement.execute(stack, heap)
+    PC = 0
+    while PC != -1:
+        statement = program[PC]
+        ret = statement.execute(runtime)
+        if ret is not None:
+            # Update PC if command is a flow control one
+            PC = ret
 

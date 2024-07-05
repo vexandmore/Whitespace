@@ -1,5 +1,6 @@
 from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
-from whitespace.commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap
+from whitespace.commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap, Runtime
+from whitespace.commands import CallSub, EndSub
 from whitespace.constants_errors import WORD_TYPE, StackError
 from whitespace.Heap import Heap
 import unittest
@@ -19,7 +20,7 @@ class TestCommands(unittest.TestCase):
         stack.append(98)
 
         # Run
-        ret = read_num.execute(stack, {})
+        ret = read_num.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -36,7 +37,7 @@ class TestCommands(unittest.TestCase):
         stack.append(98)
 
         # Run
-        ret = read_num.execute(stack, {})
+        ret = read_num.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -52,7 +53,7 @@ class TestCommands(unittest.TestCase):
         stack.append(97)
 
         # Run
-        ret = out_char.execute(stack, {})
+        ret = out_char.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -68,7 +69,7 @@ class TestCommands(unittest.TestCase):
         stack.append(97)
 
         # Run
-        ret = out_char.execute(stack, {})
+        ret = out_char.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -84,7 +85,7 @@ class TestCommands(unittest.TestCase):
         stack = array(WORD_TYPE)
         
         # Run
-        ret = push.execute(stack, {})
+        ret = push.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -97,7 +98,7 @@ class TestCommands(unittest.TestCase):
         stack = array(WORD_TYPE)
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: duplicate.execute(stack, {}))
+        self.assertRaises(StackError, lambda: duplicate.execute(Runtime(stack)))
 
     def test_duplicate(self):
         # Setup
@@ -107,7 +108,7 @@ class TestCommands(unittest.TestCase):
         stack.append(78)
         
         # Run
-        ret = duplicate.execute(stack, {})
+        ret = duplicate.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -126,7 +127,7 @@ class TestCommands(unittest.TestCase):
         stack.append(44)
         
         # Run
-        ret = swap.execute(stack, {})
+        ret = swap.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -141,7 +142,7 @@ class TestCommands(unittest.TestCase):
         stack = array(WORD_TYPE)
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: swap.execute(stack, {}))
+        self.assertRaises(StackError, lambda: swap.execute(Runtime(stack)))
 
 
     def test_discard(self):
@@ -152,7 +153,7 @@ class TestCommands(unittest.TestCase):
         stack.append(78)
         
         # Run
-        ret = discard.execute(stack, {})
+        ret = discard.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -165,7 +166,7 @@ class TestCommands(unittest.TestCase):
         stack = array(WORD_TYPE)
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: discard.execute(stack, {}))
+        self.assertRaises(StackError, lambda: discard.execute(Runtime(stack)))
 
     def test_plus(self):
         # Setup
@@ -175,7 +176,7 @@ class TestCommands(unittest.TestCase):
         stack.append(78)
         
         # Run
-        ret = plus.execute(stack, {})
+        ret = plus.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -189,7 +190,7 @@ class TestCommands(unittest.TestCase):
         stack.append(34) # need two for plus
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: plus.execute(stack, {}))
+        self.assertRaises(StackError, lambda: plus.execute(Runtime(stack)))
     
 
     def test_minus(self):
@@ -200,7 +201,7 @@ class TestCommands(unittest.TestCase):
         stack.append(78)
         
         # Run
-        ret = minus.execute(stack, {})
+        ret = minus.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -214,7 +215,7 @@ class TestCommands(unittest.TestCase):
         stack.append(34) # need two for plus
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: minus.execute(stack, {}))
+        self.assertRaises(StackError, lambda: minus.execute(Runtime(stack)))
     
     def test_times(self):
         # Setup
@@ -224,7 +225,7 @@ class TestCommands(unittest.TestCase):
         stack.append(3)
         
         # Run
-        ret = times.execute(stack, {})
+        ret = times.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -238,7 +239,7 @@ class TestCommands(unittest.TestCase):
         stack.append(34) # need two for plus
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: times.execute(stack, {}))
+        self.assertRaises(StackError, lambda: times.execute(Runtime(stack)))
     
     def test_int_divide(self):
         # Setup
@@ -249,7 +250,7 @@ class TestCommands(unittest.TestCase):
         stack.append(3)
         
         # Run
-        ret = div.execute(stack, {})
+        ret = div.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -265,7 +266,7 @@ class TestCommands(unittest.TestCase):
         stack.append(34) # need two for div
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: div.execute(stack, {}))
+        self.assertRaises(StackError, lambda: div.execute(Runtime(stack)))
     
 
     def test_modulo(self):
@@ -277,7 +278,7 @@ class TestCommands(unittest.TestCase):
         stack.append(3)
         
         # Run
-        ret = mod.execute(stack, {})
+        ret = mod.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, None)
@@ -293,7 +294,7 @@ class TestCommands(unittest.TestCase):
         stack.append(34) # need two for div
         
         # Run and Assert
-        self.assertRaises(StackError, lambda: mod.execute(stack, {}))
+        self.assertRaises(StackError, lambda: mod.execute(Runtime(stack)))
 
     ################
     # Control Flow #
@@ -305,12 +306,43 @@ class TestCommands(unittest.TestCase):
         stack = array(WORD_TYPE)
         
         # Run
-        ret = end.execute(stack, {})
+        ret = end.execute(Runtime(stack))
 
         # Assert
         self.assertEqual(ret, -1)
         self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 0)
+    
+    def test_callsub(self):
+        # Setup
+        callsub = CallSub(1, 3) # Callsub to label 3
+        callsub.target_pc = 12 # Suppose that label 3 points to instruction 12
+        runtime = Runtime()
+        runtime.PC = 8
+        
+        # Run
+        ret = callsub.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 12)
+        self.assertEqual(len(runtime.callstack), 1)
+        self.assertEqual(runtime.callstack[0], 8)
+    
+    def test_endsub(self):
+        # Setup
+        endsub = EndSub(1)
+        # TODO: figure out why passing callstack explicitly is required
+        runtime = Runtime(callstack=array('l'))
+        print(runtime)
+        runtime.callstack.append(12) # suppose last function call was from instruction 12
+        print(runtime)
+
+        # Run
+        ret = endsub.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 12)
+        self.assertEqual(len(runtime.callstack), 0)
     
     ########
     # Heap #
@@ -324,7 +356,7 @@ class TestCommands(unittest.TestCase):
         heap.write(3, 123)
 
         # Run
-        ret = readHeap.execute(stack, heap)
+        ret = readHeap.execute(Runtime(stack, heap))
 
         # Assert
         self.assertEqual(ret, None)
@@ -338,7 +370,7 @@ class TestCommands(unittest.TestCase):
         heap = Heap()
 
         # Run and Assert
-        self.assertRaises(StackError, lambda: heap_read.execute(stack, heap))
+        self.assertRaises(StackError, lambda: heap_read.execute(Runtime(stack, heap)))
     
     def test_heap_write(self):
         # Setup
@@ -349,7 +381,7 @@ class TestCommands(unittest.TestCase):
         heap = Heap()
 
         # Run
-        ret = writeHeap.execute(stack, heap)
+        ret = writeHeap.execute(Runtime(stack, heap))
 
         # Assert
         self.assertEqual(ret, None)
@@ -363,7 +395,7 @@ class TestCommands(unittest.TestCase):
         heap = Heap()
 
         # Run and Assert
-        self.assertRaises(StackError, lambda: heap_write.execute(stack, heap))
+        self.assertRaises(StackError, lambda: heap_write.execute(Runtime(stack, heap)))
 
 
 if __name__ == "__main__":
