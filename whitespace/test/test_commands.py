@@ -1,6 +1,6 @@
 from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
 from whitespace.commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap, Runtime
-from whitespace.commands import CallSub, EndSub
+from whitespace.commands import CallSub, EndSub, Jump
 from whitespace.constants_errors import WORD_TYPE, StackError
 from whitespace.Heap import Heap
 import unittest
@@ -333,9 +333,9 @@ class TestCommands(unittest.TestCase):
         endsub = EndSub(1)
         # TODO: figure out why passing callstack explicitly is required
         runtime = Runtime(callstack=array('l'))
-        print(runtime)
+        # print(runtime)
         runtime.callstack.append(12) # suppose last function call was from instruction 12
-        print(runtime)
+        # print(runtime)
 
         # Run
         ret = endsub.execute(runtime)
@@ -343,6 +343,18 @@ class TestCommands(unittest.TestCase):
         # Assert
         self.assertEqual(ret, 12)
         self.assertEqual(len(runtime.callstack), 0)
+    
+    def test_jump(self):
+        # Setup
+        jump = Jump(1, -1, 123)
+        jump.target_pc = 34
+        runtime = Runtime()
+
+        # Run
+        ret = jump.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 34)
     
     ########
     # Heap #

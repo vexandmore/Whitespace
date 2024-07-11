@@ -1,5 +1,6 @@
 from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
 from whitespace.parser import Plus, Minus, Times, IntDivide, Modulo, Write_Heap, Read_Heap
+from whitespace.parser import Jump
 import unittest
 
 
@@ -76,6 +77,10 @@ class TestParser(unittest.TestCase):
         self.run_test("[LF][Space][Space][Tab][Tab][LF]Label 3" +
                     "[Space][Space]Push[Space]+[Tab][Space]" +
                       "[Space][Tab][Space][Space][Space][LF]", [Push(1,72,3)])
+    
+    def test_flow_control(self):
+        self.run_test("[LF][Space][LF][Tab][Space][Tab][LF]", [Jump(1, -1, 5)])
+
 
 
 if __name__ == "__main__":

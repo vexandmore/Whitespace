@@ -370,6 +370,26 @@ class EndSub(Command):
     def __repr__(self) -> str:
         return f"Endsub on line {self.line} label {self.label}"
 
+
+class Jump(Command):
+    def __init__(self, line: int, label: int = -1, target_label: int = -1):
+        super().__init__(line, label)
+        self.target_label = target_label
+        self.target_pc = -1 # Will be the target program counter once commands are traversed
+
+    def execute(self, runtime: Runtime) -> int | None:
+        return self.target_pc
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Jump:
+            return super().__eq__(value) and self.target_label == value.target_label and self.target_pc == value.target_pc
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Jump on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+
+
 ########
 # Heap #
 ########
