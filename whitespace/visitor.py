@@ -1,4 +1,4 @@
-from whitespace.Commands import Command, CallSub
+from whitespace.Commands import Command, CallSub, Jump, JumpNegative, JumpZero
 from whitespace.Constants_errors import DuplicateLabels
 
 def visit_flow_control(prog: list[Command]):
@@ -15,4 +15,10 @@ def visit_flow_control(prog: list[Command]):
     
     for command in prog:
         if isinstance(command, CallSub):
+            command.target_pc = labels[command.target_label]
+        elif isinstance(command, Jump):
+            command.target_pc = labels[command.target_label]
+        elif isinstance(command, JumpZero):
+            command.target_pc = labels[command.target_label]
+        elif isinstance(command, JumpNegative):
             command.target_pc = labels[command.target_label]
