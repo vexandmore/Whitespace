@@ -1,8 +1,8 @@
-from whitespace.tokenizer import Tokenizer, TokenType
-from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
-from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo
-from whitespace.commands import Read_Heap, Write_Heap
-from whitespace.commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
+from whitespace.Tokenizer import Tokenizer, TokenType
+from whitespace.Commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
+from whitespace.Commands import Plus, Minus, Times, IntDivide, Modulo
+from whitespace.Commands import Read_Heap, Write_Heap
+from whitespace.Commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
 
 
 class Parser(Tokenizer):

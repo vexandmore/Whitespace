@@ -1,7 +1,7 @@
-from whitespace.parser import Parser
-from whitespace.commands import Command, Push, End, OutChar, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
-from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo, Write_Heap, Read_Heap
-from whitespace.commands import Jump, CallSub, EndSub, JumpZero, JumpNegative
+from whitespace.Parser import Parser
+from whitespace.Commands import Command, Push, End, OutChar, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
+from whitespace.Commands import Plus, Minus, Times, IntDivide, Modulo, Write_Heap, Read_Heap
+from whitespace.Commands import Jump, CallSub, EndSub, JumpZero, JumpNegative
 import unittest
 
 

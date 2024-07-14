@@ -2,11 +2,11 @@ from whitespace.Heap import Heap
 from abc import ABC, abstractmethod
 from array import array
 from typing import TextIO
-from whitespace.constants_errors import WORD_TYPE
+from whitespace.Constants_errors import WORD_TYPE
 from whitespace.Heap import Heap
 import sys
 
-from whitespace.constants_errors import StackError, CannotFindJumpTarget
+from whitespace.Constants_errors import StackError, CannotFindJumpTarget
 
 class Runtime():
 

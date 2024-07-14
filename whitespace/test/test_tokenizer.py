@@ -1,4 +1,4 @@
-from whitespace.tokenizer import Tokenizer, Token, TokenType
+from whitespace.Tokenizer import Tokenizer, Token, TokenType
 import unittest
 
 

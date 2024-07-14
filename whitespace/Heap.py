@@ -1,4 +1,4 @@
-from whitespace.constants_errors import WORD_TYPE, HeapError
+from whitespace.Constants_errors import WORD_TYPE, HeapError
 from array import array
 
 class Heap:

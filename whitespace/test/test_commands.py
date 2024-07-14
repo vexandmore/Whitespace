@@ -1,11 +1,14 @@
-from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
-from whitespace.commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap, Runtime
-from whitespace.commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
-from whitespace.constants_errors import WORD_TYPE, StackError
+from whitespace.Commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
+from whitespace.Commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap
+from whitespace.Commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
+from whitespace.Constants_errors import WORD_TYPE, StackError
 from whitespace.Heap import Heap
+from whitespace.Runtime import Runtime
+
 import unittest
 import io
 from array import array
+
 
 class TestCommands(unittest.TestCase):
 
