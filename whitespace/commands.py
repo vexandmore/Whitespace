@@ -215,15 +215,14 @@ class Modulo(Command):
 ######
 
 class OutChar(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdout, label: int = -1):
-        self.file = file
+    def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
     def execute(self, runtime: Runtime) -> None:
         if len(runtime.stack) == 0:
             raise StackError("Empty runtime.stack")
 
-        print(chr(runtime.stack.pop()), file=self.file, end="")
+        print(chr(runtime.stack.pop()), file=runtime.file_out, end="")
     
     def __eq__(self, value: object) -> bool:
         if type(value) == OutChar:
@@ -236,15 +235,14 @@ class OutChar(Command):
 
 
 class OutNum(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdout, label: int = -1):
-        self.file = file
+    def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
     def execute(self, runtime: Runtime) -> None:
         if len(runtime.stack) == 0:
             raise StackError("Empty runtime.stack")
 
-        print(runtime.stack.pop(), file=self.file, end="")
+        print(runtime.stack.pop(), file=runtime.file_out, end="")
     
     def __eq__(self, value: object) -> bool:
         if type(value) == OutNum:
@@ -257,12 +255,11 @@ class OutNum(Command):
 
 
 class ReadChar(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdin, label: int = -1):
-        self.file = file
+    def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
     def execute(self, runtime: Runtime) -> None:
-        read_byte = int(self.file.read()[0])
+        read_byte = int(runtime.file_in.read()[0])
         runtime.stack.append(read_byte)
     
     def __eq__(self, value: object) -> bool:
@@ -276,12 +273,11 @@ class ReadChar(Command):
     
 
 class ReadNum(Command):
-    def __init__(self, line: int, file: TextIO = sys.stdin, label: int = -1):
-        self.file = file
+    def __init__(self, line: int, label: int = -1):
         super().__init__(line, label)
 
     def execute(self, runtime: Runtime) -> None:
-        line = self.file.readline()
+        line = runtime.file_in.readline()
         read_int = int(line)
         runtime.stack.append(read_int)
     

@@ -18,12 +18,12 @@ class TestCommands(unittest.TestCase):
     def test_read_num(self):
         # Setup
         file = io.BytesIO(b"  \t 103\n")
-        read_num = ReadNum(1, file)
+        read_num = ReadNum(1)
         stack = array(WORD_TYPE)
         stack.append(98)
 
         # Run
-        ret = read_num.execute(Runtime(stack))
+        ret = read_num.execute(Runtime(stack=stack, file_in=file))
 
         # Assert
         self.assertEqual(ret, None)
@@ -35,12 +35,12 @@ class TestCommands(unittest.TestCase):
     def test_read_char(self):
         # Setup
         file = io.BytesIO(b"a")
-        read_num = ReadChar(1, file)
+        read_num = ReadChar(1)
         stack = array(WORD_TYPE)
         stack.append(98)
 
         # Run
-        ret = read_num.execute(Runtime(stack))
+        ret = read_num.execute(Runtime(stack=stack, file_in=file))
 
         # Assert
         self.assertEqual(ret, None)
@@ -51,12 +51,12 @@ class TestCommands(unittest.TestCase):
     def test_out_num(self):
         # Setup
         file = io.StringIO("")
-        out_char = OutNum(1, file)
+        out_char = OutNum(1)
         stack = array(WORD_TYPE)
         stack.append(97)
 
         # Run
-        ret = out_char.execute(Runtime(stack))
+        ret = out_char.execute(Runtime(stack=stack, file_out=file))
 
         # Assert
         self.assertEqual(ret, None)
@@ -67,12 +67,12 @@ class TestCommands(unittest.TestCase):
     def test_out_char(self):
         # Setup
         file = io.StringIO("")
-        out_char = OutChar(1, file)
+        out_char = OutChar(1)
         stack = array(WORD_TYPE)
         stack.append(97)
 
         # Run
-        ret = out_char.execute(Runtime(stack))
+        ret = out_char.execute(Runtime(stack=stack, file_out=file))
 
         # Assert
         self.assertEqual(ret, None)
