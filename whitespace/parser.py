@@ -2,7 +2,7 @@ from whitespace.tokenizer import Tokenizer, TokenType
 from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
 from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo
 from whitespace.commands import Read_Heap, Write_Heap
-from whitespace.commands import CallSub, EndSub, Jump
+from whitespace.commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
 
 
 class Parser(Tokenizer):
@@ -142,6 +142,10 @@ class Parser(Tokenizer):
 
             if lookahead.type == TokenType.LINEFEED:
                 return EndSub(lookahead.line, self.get_label())
+            elif lookahead.type == TokenType.SPACE:
+                return JumpZero(lookahead.line, self.get_label(), self.parseLabel())
+            elif lookahead.type == TokenType.TAB:
+                return JumpNegative(lookahead.line, self.get_label(), self.parseLabel())
             else:
                 return None
         else:

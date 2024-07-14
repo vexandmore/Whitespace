@@ -9,10 +9,11 @@ import sys
 from whitespace.constants_errors import StackError, CannotFindJumpTarget
 
 class Runtime():
-    def __init__(self, stack: array = array(WORD_TYPE), heap: Heap = Heap(), callstack: array = array(WORD_TYPE), PC: int = 0):
-        self.stack = stack
-        self.heap = heap
-        self.callstack = callstack
+
+    def __init__(self, stack: array | None = None, heap: Heap | None = None, callstack: array | None = None, PC: int = 0):
+        self.stack = stack if stack is not None else array(WORD_TYPE)
+        self.heap = heap if heap is not None else Heap()
+        self.callstack = callstack if callstack is not None else array(WORD_TYPE)
         self.PC = PC
     
     def __repr__(self) -> str:
@@ -41,7 +42,7 @@ class Command(ABC):
             return False
 
 ######################
-# runtime.stack Manipulation #
+# Stack Manipulation #
 ######################
 class Push(Command):
     def __init__(self, line:int, num: int, label: int = -1):
@@ -388,6 +389,50 @@ class Jump(Command):
 
     def __repr__(self) -> str:
         return f"Jump on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+
+
+class JumpZero(Command):
+    def __init__(self, line: int, label: int = -1, target_label: int = -1):
+        super().__init__(line, label)
+        self.target_label = target_label
+        self.target_pc = -1 # Will be the target program counter once commands are traversed
+
+    def execute(self, runtime: Runtime) -> int | None:
+        if len(runtime.stack) == 0:
+            raise StackError("Stack is empty, yet a jump if top of stack is 0 is desired")
+        jump = runtime.stack[-1] == 0
+        return self.target_pc if jump else None
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == JumpZero:
+            return super().__eq__(value) and self.target_label == value.target_label and self.target_pc == value.target_pc
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Jump if zero on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+
+
+class JumpNegative(Command):
+    def __init__(self, line: int, label: int = -1, target_label: int = -1):
+        super().__init__(line, label)
+        self.target_label = target_label
+        self.target_pc = -1 # Will be the target program counter once commands are traversed
+
+    def execute(self, runtime: Runtime) -> int | None:
+        if len(runtime.stack) == 0:
+            raise StackError("Stack is empty, yet a jump if top of stack is negative is desired")
+        jump = runtime.stack[-1] < 0
+        return self.target_pc if jump else None
+    
+    def __eq__(self, value: object) -> bool:
+        if type(value) == JumpNegative:
+            return super().__eq__(value) and self.target_label == value.target_label and self.target_pc == value.target_pc
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"Jump if zero on line {self.line} label {self.target_label}, target pc {self.target_pc}"
 
 
 ########

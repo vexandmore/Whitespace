@@ -1,6 +1,6 @@
 from whitespace.commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
 from whitespace.commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap, Runtime
-from whitespace.commands import CallSub, EndSub, Jump
+from whitespace.commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
 from whitespace.constants_errors import WORD_TYPE, StackError
 from whitespace.Heap import Heap
 import unittest
@@ -331,8 +331,7 @@ class TestCommands(unittest.TestCase):
     def test_endsub(self):
         # Setup
         endsub = EndSub(1)
-        # TODO: figure out why passing callstack explicitly is required
-        runtime = Runtime(callstack=array('l'))
+        runtime = Runtime()
         # print(runtime)
         runtime.callstack.append(12) # suppose last function call was from instruction 12
         # print(runtime)
@@ -355,7 +354,84 @@ class TestCommands(unittest.TestCase):
 
         # Assert
         self.assertEqual(ret, 34)
+
+
+    def test_jump_zero_doesnt_when_nonzero_stack_top(self):
+        # Setup
+        jumpZero = JumpZero(1, -1, 123)
+        jumpZero.target_pc = 34
+        runtime = Runtime()
+        runtime.stack.append(2)
+
+        # Run
+        ret = jumpZero.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, None)
+
+
+    def test_jump_zero_jumps_when_zero_stack_top(self):
+        # Setup
+        jumpZero = JumpZero(1, -1, 123)
+        jumpZero.target_pc = 34
+        runtime = Runtime()
+        runtime.stack.append(0)
+
+        # Run
+        ret = jumpZero.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 34)
+
+
+    def test_jump_zero_throws(self):
+        # Setup
+        jumpZero = JumpZero(1, -1, 123)
+        jumpZero.target_pc = 34
+        runtime = Runtime()
+
+        # Run and assert
+        self.assertRaises(StackError, lambda: jumpZero.execute(runtime))
     
+
+    def test_jump_negative_doesnt_when_positive_stack_top(self):
+        # Setup
+        jumpNegative = JumpNegative(1, -1, 123)
+        jumpNegative.target_pc = 34
+        runtime = Runtime()
+        runtime.stack.append(2)
+
+        # Run
+        ret = jumpNegative.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, None)
+
+
+    def test_jump_negative_jumps_when_neg1_stack_top(self):
+        # Setup
+        jumpNegative = JumpNegative(1, -1, 123)
+        jumpNegative.target_pc = 34
+        runtime = Runtime()
+        runtime.stack.append(-1)
+
+        # Run
+        ret = jumpNegative.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 34)
+
+
+    def test_jump_negative_throws(self):
+        # Setup
+        jumpNegative = JumpNegative(1, -1, 123)
+        jumpNegative.target_pc = 34
+        runtime = Runtime()
+
+        # Run and assert
+        self.assertRaises(StackError, lambda: jumpNegative.execute(runtime))
+
+
     ########
     # Heap #
     ########
