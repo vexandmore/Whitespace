@@ -1,23 +1,16 @@
 from whitespace.Constants_errors import WORD_TYPE
-from whitespace.Parser import Parser
-from whitespace.Commands import Runtime
-from whitespace.Visitor import visit_flow_control
+from whitespace.Heap import Heap
 
-def execute(source: str) -> None:
-    p = Parser(source)
-    program = p.allCommands()
-    visit_flow_control(program)
-    print(f"Program: {program}")
 
-    runtime = Runtime()
+from array import array
 
-    PC = 0
-    while PC != -1:
-        statement = program[PC]
-        ret = statement.execute(runtime)
-        if ret is None:
-            PC += 1
-        else:
-            # Update PC if command is a flow control one
-            PC = ret
 
+class Runtime():
+    def __init__(self, stack: array | None = None, heap: Heap | None = None, callstack: array | None = None, PC: int = 0):
+        self.stack = stack if stack is not None else array(WORD_TYPE)
+        self.heap = heap if heap is not None else Heap()
+        self.callstack = callstack if callstack is not None else array(WORD_TYPE)
+        self.PC = PC
+
+    def __repr__(self) -> str:
+        return f"Runtime, stack {self.stack} heap {self.heap} callstack {self.callstack} PC {self.PC}"

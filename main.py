@@ -1,5 +1,5 @@
 import sys
-from whitespace.Runtime import execute
+from whitespace.Runner import execute
 
 def main() -> None:
     if len(sys.argv) >= 2:
