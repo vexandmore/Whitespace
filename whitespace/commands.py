@@ -330,7 +330,7 @@ class End(Command):
 
 
 class CallSub(Command):
-    def __init__(self, line: int, target_label: int, label: int = -1):
+    def __init__(self, line: int, label: int = -1, target_label: int = -1):
         self.target_label = target_label
         self.target_pc = -1 # Will be the target program counter
         super().__init__(line, label)

@@ -315,7 +315,7 @@ class TestCommands(unittest.TestCase):
     
     def test_callsub(self):
         # Setup
-        callsub = CallSub(1, 3) # Callsub to label 3
+        callsub = CallSub(1, -1, 3) # Callsub to label 3
         callsub.target_pc = 12 # Suppose that label 3 points to instruction 12
         runtime = Runtime()
         runtime.PC = 8

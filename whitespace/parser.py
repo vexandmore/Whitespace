@@ -1,6 +1,8 @@
 from whitespace.tokenizer import Tokenizer, TokenType
 from whitespace.commands import Command, End, Push, OutChar, OutNum, ReadChar, ReadNum, Duplicate, Swap, Discard
-from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo, Read_Heap, Write_Heap, Jump
+from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo
+from whitespace.commands import Read_Heap, Write_Heap
+from whitespace.commands import CallSub, EndSub, Jump
 
 
 class Parser(Tokenizer):
@@ -131,6 +133,15 @@ class Parser(Tokenizer):
             elif lookahead.type == TokenType.LINEFEED:
                 target_label = self.parseLabel()
                 return Jump(lookahead.line, self.get_label(), target_label)
+            elif lookahead.type == TokenType.TAB:
+                return CallSub(lookahead.line, self.get_label(), self.parseLabel())
+            else:
+                return None
+        elif lookahead.type == TokenType.TAB:
+            lookahead = self.nextToken()
+
+            if lookahead.type == TokenType.LINEFEED:
+                return EndSub(lookahead.line, self.get_label())
             else:
                 return None
         else:

@@ -1,6 +1,7 @@
-from whitespace.parser import Command, Push, End, OutChar, Parser, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
-from whitespace.parser import Plus, Minus, Times, IntDivide, Modulo, Write_Heap, Read_Heap
-from whitespace.parser import Jump
+from whitespace.parser import Parser
+from whitespace.commands import Command, Push, End, OutChar, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
+from whitespace.commands import Plus, Minus, Times, IntDivide, Modulo, Write_Heap, Read_Heap
+from whitespace.commands import Jump, CallSub, EndSub
 import unittest
 
 
@@ -80,6 +81,8 @@ class TestParser(unittest.TestCase):
     
     def test_flow_control(self):
         self.run_test("[LF][Space][LF][Tab][Space][Tab][LF]", [Jump(1, -1, 5)])
+        self.run_test("[LF][Space][Tab][Tab][Space][Space][LF]", [CallSub(1, -1, 4)])
+        self.run_test("[LF][Tab][LF]", [EndSub(1, -1)])
 
 
 
