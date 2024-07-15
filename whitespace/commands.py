@@ -2,8 +2,6 @@ from whitespace.Constants_errors import StackError, CannotFindJumpTarget
 from whitespace.Runtime import Runtime
 
 from abc import ABC, abstractmethod
-from typing import TextIO
-import sys
 
 class Command(ABC):
     def __init__(self, line: int, label: int = -1):
@@ -44,7 +42,7 @@ class Push(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Push {self.num} line {self.line}"
+        return f"Push {self.num} line {self.line} label {self.label}"
 
 
 class Duplicate(Command):

@@ -3,8 +3,8 @@ from whitespace.Parser import Parser
 from whitespace.Runtime import Runtime
 from whitespace.Visitor import visit_flow_control
 
-def execute(source: str) -> None:
-    p = Parser(source)
+def execute(source: str, detect_readable: bool) -> None:
+    p = Parser(source, detect_readable)
     program = p.allCommands()
     visit_flow_control(program)
     print(f"Program: {program}")

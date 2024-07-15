@@ -6,8 +6,8 @@ from whitespace.Commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
 
 
 class Parser(Tokenizer):
-    def __init__(self, text: str):
-        super().__init__(text)
+    def __init__(self, text: str, detect_readable: bool):
+        super().__init__(text, detect_readable)
         self.label = -1
 
     def get_label(self):

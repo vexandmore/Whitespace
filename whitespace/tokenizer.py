@@ -35,11 +35,14 @@ class Token():
 
 # In this context, a BasicToken is space, tab, or linefeed
 class Tokenizer():
-    def __init__(self, text: str):
+    def __init__(self, text: str, detect_readable: bool):
         self.text = text
         self.index = 0
         self.line = 1
-        self.readable_mode = text.count("[") > 0
+        if detect_readable:
+            self.readable_mode = text.count("[Space]") > 0 and text.count("[Tab]") > 0 and text.count("[LF]") > 0
+        else:
+            self.readable_mode = False
 
     def returnNextToken(self):
         self.index += 1
