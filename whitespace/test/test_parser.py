@@ -7,7 +7,7 @@ import unittest
 
 class TestParser(unittest.TestCase):
     def run_test(self, source: str, expected: list[Command]) -> None:
-        t = Parser(source)
+        t = Parser(source, detect_readable=True)
         tokens = t.allCommands()
         self.assertEqual(len(expected), len(tokens), f"Check commands are right length: expect {expected}, {tokens}")
         for expected_t,actual_t in zip(expected, tokens):

@@ -40,7 +40,7 @@ class Tokenizer():
         self.index = 0
         self.line = 1
         if detect_readable:
-            self.readable_mode = text.count("[Space]") > 0 and text.count("[Tab]") > 0 and text.count("[LF]") > 0
+            self.readable_mode = text.count("[Space]") > 0 or text.count("[Tab]") > 0 or text.count("[LF]") > 0
         else:
             self.readable_mode = False
 

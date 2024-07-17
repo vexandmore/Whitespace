@@ -11,7 +11,8 @@ class TestVisitor(unittest.TestCase):
         p = Parser("[LF][Space][Space] [Tab][Space] [LF] Mark with label 2" + 
                    "[Space][Space] [Space][Space][LF] add 0 to stack" + 
                    "[LF][Space][Space] [Tab][Space] [LF] Mark with label 2" + 
-                   "[Space][Space] [Space][Tab][LF] add 1 to stack" )
+                   "[Space][Space] [Space][Tab][LF] add 1 to stack", detect_readable=True)
         program = p.allCommands()
         self.assertRaises(DuplicateLabels, lambda: visit_flow_control(program))
+        # TODO finish this
     

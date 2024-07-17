@@ -23,6 +23,39 @@ class Command(ABC):
             return self.line == value.line and self.label == value.label
         else:
             return False
+    
+    # Returns the minimum syntax for this command
+    @abstractmethod
+    def minified(self) -> str:
+        pass
+    
+    # Useful methods to encode numbers and labels
+    def encodeNumber(self, n: int) -> str:
+        if n == 0:
+            return "  \n"
+
+        out = ""
+        signchar = " " if n > 0 else "\t"
+        while n > 0 or n < 0:
+            bit = n % 2
+            out += " " if bit == 0 else "\t"
+            n = n // 2
+        out = out[::-1] # reverse string
+        return signchar + out + "\n"
+    
+    def encodeLabel(self, n: int) -> str:
+        if n == 0:
+            return " \n"
+        
+        out = ""
+        while n > 0:
+            bit = n % 2
+            out += " " if bit == 0 else "\t"
+            n = n // 2
+        out = out[::-1] # reverse string
+        out += "\n"
+        return out
+        
 
 ######################
 # Stack Manipulation #
@@ -43,6 +76,9 @@ class Push(Command):
     
     def __repr__(self) -> str:
         return f"Push {self.num} line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "  " + self.encodeNumber(self.num)
 
 
 class Duplicate(Command):
@@ -63,6 +99,9 @@ class Duplicate(Command):
     
     def __repr__(self) -> str:
         return f"Duplicate on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return " \n "
 
 
 class Swap(Command):
@@ -85,7 +124,9 @@ class Swap(Command):
     
     def __repr__(self) -> str:
         return f"Swap on line {self.line} label {self.label}"
-
+    
+    def minified(self) -> str:
+        return " \n\t"
 
 class Discard(Command):
     def __init__(self, line:int, label: int = -1):
@@ -104,6 +145,9 @@ class Discard(Command):
     
     def __repr__(self) -> str:
         return f"Discard on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return " \n\n"
     
 # Copy and slide: not implemented yet
 
@@ -129,6 +173,9 @@ class Plus(Command):
     
     def __repr__(self) -> str:
         return f"Plus on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t   "
 
 class Minus(Command):
     def __init__(self, line:int, label: int = -1):
@@ -148,6 +195,9 @@ class Minus(Command):
     
     def __repr__(self) -> str:
         return f"Minus on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t  \t"
 
 class Times(Command):
     def __init__(self, line:int, label: int = -1):
@@ -167,6 +217,9 @@ class Times(Command):
     
     def __repr__(self) -> str:
         return f"Times on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t  \n"
 
 
 class IntDivide(Command):
@@ -187,6 +240,9 @@ class IntDivide(Command):
     
     def __repr__(self) -> str:
         return f"IntDivide on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t \t "
 
 
 class Modulo(Command):
@@ -207,6 +263,9 @@ class Modulo(Command):
     
     def __repr__(self) -> str:
         return f"Modulo on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t \t\t"
 
 ######
 # IO #
@@ -230,6 +289,9 @@ class OutChar(Command):
 
     def __repr__(self) -> str:
         return f"Outchar on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t\n  "
 
 
 class OutNum(Command):
@@ -250,6 +312,9 @@ class OutNum(Command):
 
     def __repr__(self) -> str:
         return f"Outnum on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t\n \t"
 
 
 class ReadChar(Command):
@@ -269,6 +334,9 @@ class ReadChar(Command):
     def __repr__(self) -> str:
         return f"Inchar on line {self.line} label {self.label}"
     
+    def minified(self) -> str:
+        return "\t\n\t "
+    
 
 class ReadNum(Command):
     def __init__(self, line: int, label: int = -1):
@@ -287,6 +355,9 @@ class ReadNum(Command):
 
     def __repr__(self) -> str:
         return f"Inchar on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t\n\t\t"
 
 ################
 # Control Flow #
@@ -307,6 +378,9 @@ class End(Command):
 
     def __repr__(self) -> str:
         return f"End on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\n\n\n"
 
 
 class CallSub(Command):
@@ -330,6 +404,9 @@ class CallSub(Command):
 
     def __repr__(self) -> str:
         return f"Callsub on line {self.line} label {self.label}, target label {self.target_label}, PC {self.target_pc}"
+    
+    def minified(self) -> str:
+        return "\n \t" + self.encodeLabel(self.target_label)
 
 
 class EndSub(Command):
@@ -349,6 +426,9 @@ class EndSub(Command):
 
     def __repr__(self) -> str:
         return f"Endsub on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\n\t\n"
 
 
 class Jump(Command):
@@ -368,6 +448,9 @@ class Jump(Command):
 
     def __repr__(self) -> str:
         return f"Jump on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+    
+    def minified(self) -> str:
+        return "\n \n" + self.encodeLabel(self.target_label)
 
 
 class JumpZero(Command):
@@ -390,6 +473,9 @@ class JumpZero(Command):
 
     def __repr__(self) -> str:
         return f"Jump if zero on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+    
+    def minified(self) -> str:
+        return "\n\t " + self.encodeLabel(self.target_label)
 
 
 class JumpNegative(Command):
@@ -412,6 +498,9 @@ class JumpNegative(Command):
 
     def __repr__(self) -> str:
         return f"Jump if zero on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+    
+    def minified(self) -> str:
+        return "\n\t\t" + self.encodeLabel(self.target_label)
 
 
 ########
@@ -438,6 +527,9 @@ class Read_Heap(Command):
 
     def __repr__(self) -> str:
         return f"Read heap on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t\t\t"
 
 class Write_Heap(Command):
     def __init__(self, line: int, label: int = -1):
@@ -459,3 +551,6 @@ class Write_Heap(Command):
 
     def __repr__(self) -> str:
         return f"Write heap on line {self.line} label {self.label}"
+    
+    def minified(self) -> str:
+        return "\t\t "

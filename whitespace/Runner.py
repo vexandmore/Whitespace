@@ -21,3 +21,13 @@ def execute(source: str, detect_readable: bool) -> None:
             # Update PC if command is a flow control one
             PC = ret
 
+def minify(source: str, detect_readable: bool) -> str:
+    p = Parser(source, detect_readable)
+    program = p.allCommands()
+    
+    out = ""
+
+    for command in program:
+        out += command.minified()
+    
+    return out

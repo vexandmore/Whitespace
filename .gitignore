@@ -1,3 +1,7 @@
+# Custom
+# Minified ws files
+*.min.ws 
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

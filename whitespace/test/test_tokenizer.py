@@ -11,7 +11,7 @@ class TestToken(unittest.TestCase):
 
 class TestTokenizer(unittest.TestCase):
     def run_test(self, source: str, expected: list[TokenType]) -> None:
-        t = Tokenizer(source)
+        t = Tokenizer(source, detect_readable=True)
         tokens = t.allTokens()
         self.assertEqual(len(expected), len(tokens), "Check tokens are right length")
         for expected_t,actual_t in zip(expected, tokens):
