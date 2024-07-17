@@ -8,7 +8,7 @@ Python 3.10+ required for the type hints.
 If `-l` is passed, the input file can either be in the original input format (only
 tabs, spaces, linefeeds are interpreted) or in a "readable mode" where [Space],
 [Tab], [LF] are used instead (when readable mode is detected, actual whitespace is ignored).
-Readable mode is detected when [Space], [Tab], or [LF] are all detected in the file.
+Readable mode is detected when [Space], [Tab], or [LF] is detected in the file.
 
 If `-m` is passed, the input file is minified (and transformed from readable mode
 into pure whitespace if necessary) and written to a file with the same name as the
