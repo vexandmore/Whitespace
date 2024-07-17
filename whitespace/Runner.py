@@ -7,7 +7,6 @@ def execute(source: str, detect_readable: bool) -> None:
     p = Parser(source, detect_readable)
     program = p.allCommands()
     visit_flow_control(program)
-    print(f"Program: {program}")
 
     runtime = Runtime()
 

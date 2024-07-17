@@ -7,6 +7,7 @@ def parse_args() -> Namespace:
     parser = ArgumentParser(description="Run whitespace interpreter/transformer")
     parser.add_argument('-l', dest='loose', metavar="loose", action="store_const", const=True, default=False)
     parser.add_argument('-m', dest='minify', metavar="minify", action="store_const", const=True, default=False)
+    parser.add_argument('-p', dest='print', metavar="print", action="store_const", const=True, default=False)
     parser.add_argument('file', metavar='file', nargs=1, default=None, type=str)
     args = parser.parse_args(sys.argv[1:])
 
@@ -29,6 +30,8 @@ def main() -> None:
                 f.write(minified)
                 print("Wrote minified file to " + out_filename)
         else:
+            if args.print:
+                print(contents)
             execute(contents, args.loose)
 
     else:
