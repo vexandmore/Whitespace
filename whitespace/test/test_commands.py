@@ -26,7 +26,7 @@ class TestCommands(unittest.TestCase):
         ret = read_num.execute(Runtime(stack=stack, file_in=file))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 2)
         self.assertEqual(stack[0], 98)
         self.assertEqual(stack[1], 103)
@@ -43,7 +43,7 @@ class TestCommands(unittest.TestCase):
         ret = read_num.execute(Runtime(stack=stack, file_in=file))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 2)
         self.assertEqual(stack[0], 98)
         self.assertEqual(stack[1], 97)
@@ -59,7 +59,7 @@ class TestCommands(unittest.TestCase):
         ret = out_char.execute(Runtime(stack=stack, file_out=file))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(file.getvalue(), "97")
         self.assertEqual(len(stack), 0)
 
@@ -75,7 +75,7 @@ class TestCommands(unittest.TestCase):
         ret = out_char.execute(Runtime(stack=stack, file_out=file))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(file.getvalue(), "a")
         self.assertEqual(len(stack), 0)
     
@@ -91,7 +91,7 @@ class TestCommands(unittest.TestCase):
         ret = push.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 32)
 
@@ -114,7 +114,7 @@ class TestCommands(unittest.TestCase):
         ret = duplicate.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 3)
         self.assertEqual(stack[0], 24)
         self.assertEqual(stack[1], 78)
@@ -133,7 +133,7 @@ class TestCommands(unittest.TestCase):
         ret = swap.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 3)
         self.assertEqual(stack[0], 24)
         self.assertEqual(stack[1], 44)
@@ -159,7 +159,7 @@ class TestCommands(unittest.TestCase):
         ret = discard.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24)
     
@@ -182,7 +182,7 @@ class TestCommands(unittest.TestCase):
         ret = plus.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24 + 78)
 
@@ -207,7 +207,7 @@ class TestCommands(unittest.TestCase):
         ret = minus.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24 - 78)
 
@@ -231,7 +231,7 @@ class TestCommands(unittest.TestCase):
         ret = times.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 24)
 
@@ -256,7 +256,7 @@ class TestCommands(unittest.TestCase):
         ret = div.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 3)
@@ -284,7 +284,7 @@ class TestCommands(unittest.TestCase):
         ret = mod.execute(Runtime(stack))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 1)
@@ -370,7 +370,7 @@ class TestCommands(unittest.TestCase):
         ret = jumpZero.execute(runtime)
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
 
 
     def test_jump_zero_jumps_when_zero_stack_top(self):
@@ -408,7 +408,7 @@ class TestCommands(unittest.TestCase):
         ret = jumpNegative.execute(runtime)
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
 
 
     def test_jump_negative_jumps_when_neg1_stack_top(self):
@@ -450,7 +450,7 @@ class TestCommands(unittest.TestCase):
         ret = readHeap.execute(Runtime(stack, heap))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 1)
         self.assertEqual(stack[0], 123)
 
@@ -475,7 +475,7 @@ class TestCommands(unittest.TestCase):
         ret = writeHeap.execute(Runtime(stack, heap))
 
         # Assert
-        self.assertEqual(ret, None)
+        self.assertEqual(ret, 1)
         self.assertEqual(len(stack), 0)
         self.assertEqual(heap.read(3), 123)
 

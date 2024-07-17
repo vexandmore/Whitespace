@@ -10,15 +10,9 @@ def execute(source: str, detect_readable: bool) -> None:
 
     runtime = Runtime()
 
-    PC = 0
-    while PC != -1:
-        statement = program[PC]
-        ret = statement.execute(runtime)
-        if ret is None:
-            PC += 1
-        else:
-            # Update PC if command is a flow control one
-            PC = ret
+    while runtime.PC != -1 and runtime.PC < len(program):
+        statement = program[runtime.PC]
+        runtime.PC = statement.execute(runtime)
 
 def minify(source: str, detect_readable: bool) -> str:
     p = Parser(source, detect_readable)
