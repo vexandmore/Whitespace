@@ -30,9 +30,7 @@ def main() -> None:
                 f.write(minified)
                 print("Wrote minified file to " + out_filename)
         else:
-            if args.print:
-                print(contents)
-            execute(contents, args.loose)
+            execute(contents, args.loose, args.print)
 
     else:
         print("ERROR: no file")

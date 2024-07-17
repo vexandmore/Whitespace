@@ -1,12 +1,16 @@
-from whitespace.Constants_errors import WORD_TYPE
 from whitespace.Parser import Parser
 from whitespace.Runtime import Runtime
 from whitespace.Visitor import visit_flow_control
 
-def execute(source: str, detect_readable: bool) -> None:
+def execute(source: str, detect_readable: bool, print_out: bool) -> None:
     p = Parser(source, detect_readable)
     program = p.allCommands()
     visit_flow_control(program)
+
+    if print_out:
+        print("Program:")
+        print("\n".join(map(str, program)))
+        print() # add newline
 
     runtime = Runtime()
 

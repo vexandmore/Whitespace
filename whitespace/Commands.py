@@ -18,8 +18,12 @@ class Command(ABC):
     def execute(self, runtime: Runtime) -> int:
         pass
 
+    # Used to print out label only if it exists (ie is not -1)
+    def label_repr(self) -> str:
+        return f"label {self.label}" if self.label != -1 else ""
+
     def __repr__(self) -> str:
-        return f"Command on line {self.line} label {self.label}"
+        return f"Command on line {self.line} " + self.label_repr()
     
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Command):
@@ -86,7 +90,7 @@ class Push(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Push {self.num} line {self.line} label {self.label}"
+        return f"Push {self.num} line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "  " + self.encodeNumber(self.num)
@@ -110,7 +114,7 @@ class Duplicate(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Duplicate on line {self.line} label {self.label}"
+        return f"Duplicate on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + " \n "
@@ -137,7 +141,7 @@ class Swap(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Swap on line {self.line} label {self.label}"
+        return f"Swap on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + " \n\t"
@@ -160,7 +164,7 @@ class Discard(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Discard on line {self.line} label {self.label}"
+        return f"Discard on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + " \n\n"
@@ -190,7 +194,7 @@ class Plus(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Plus on line {self.line} label {self.label}"
+        return f"Plus on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t   "
@@ -214,7 +218,7 @@ class Minus(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Minus on line {self.line} label {self.label}"
+        return f"Minus on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t  \t"
@@ -238,7 +242,7 @@ class Times(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Times on line {self.line} label {self.label}"
+        return f"Times on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t  \n"
@@ -263,7 +267,7 @@ class IntDivide(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"IntDivide on line {self.line} label {self.label}"
+        return f"IntDivide on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t \t "
@@ -288,7 +292,7 @@ class Modulo(Command):
             return False
     
     def __repr__(self) -> str:
-        return f"Modulo on line {self.line} label {self.label}"
+        return f"Modulo on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t \t\t"
@@ -316,7 +320,7 @@ class OutChar(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Outchar on line {self.line} label {self.label}"
+        return f"Outchar on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t\n  "
@@ -341,7 +345,7 @@ class OutNum(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Outnum on line {self.line} label {self.label}"
+        return f"Outnum on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t\n \t"
@@ -364,7 +368,7 @@ class ReadChar(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Inchar on line {self.line} label {self.label}"
+        return f"Inchar on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t\n\t "
@@ -388,7 +392,7 @@ class ReadNum(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Inchar on line {self.line} label {self.label}"
+        return f"Inchar on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t\n\t\t"
@@ -411,7 +415,7 @@ class End(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"End on line {self.line} label {self.label}"
+        return f"End on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\n\n\n"
@@ -437,7 +441,7 @@ class CallSub(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Callsub on line {self.line} label {self.label}, target label {self.target_label}, PC {self.target_pc}"
+        return f"Callsub on line {self.line} target label {self.target_label}, PC {self.target_pc} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\n \t" + self.encodeLabel(self.target_label)
@@ -459,7 +463,7 @@ class EndSub(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Endsub on line {self.line} label {self.label}"
+        return f"Endsub on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\n\t\n"
@@ -481,7 +485,7 @@ class Jump(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Jump on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+        return f"Jump on line {self.line} to label {self.target_label}, target pc {self.target_pc}"
     
     def minified(self) -> str:
         return super().minified() + "\n \n" + self.encodeLabel(self.target_label)
@@ -506,7 +510,7 @@ class JumpZero(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Jump if zero on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+        return f"Jump if zero on line {self.line} to label {self.target_label}, target pc {self.target_pc}"
     
     def minified(self) -> str:
         return super().minified() + "\n\t " + self.encodeLabel(self.target_label)
@@ -531,7 +535,7 @@ class JumpNegative(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Jump if zero on line {self.line} label {self.target_label}, target pc {self.target_pc}"
+        return f"Jump if zero on line {self.line} to label {self.target_label}, target pc {self.target_pc}"
     
     def minified(self) -> str:
         return super().minified() + "\n\t\t" + self.encodeLabel(self.target_label)
@@ -560,7 +564,7 @@ class Read_Heap(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Read heap on line {self.line} label {self.label}"
+        return f"Read heap on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t\t\t"
@@ -584,7 +588,7 @@ class Write_Heap(Command):
             return False
 
     def __repr__(self) -> str:
-        return f"Write heap on line {self.line} label {self.label}"
+        return f"Write heap on line {self.line} " + self.label_repr()
     
     def minified(self) -> str:
         return super().minified() + "\t\t "
