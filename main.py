@@ -8,6 +8,7 @@ def parse_args() -> Namespace:
     parser.add_argument('-l', dest='loose', metavar="loose", action="store_const", const=True, default=False)
     parser.add_argument('-m', dest='minify', metavar="minify", action="store_const", const=True, default=False)
     parser.add_argument('-p', dest='print', metavar="print", action="store_const", const=True, default=False)
+    parser.add_argument('-v', dest='verbose', metavar="verbose", action="store_const", const=True, default=False)
     parser.add_argument('file', metavar='file', nargs=1, default=None, type=str)
     args = parser.parse_args(sys.argv[1:])
 
@@ -30,7 +31,7 @@ def main() -> None:
                 f.write(minified)
                 print("Wrote minified file to " + out_filename)
         else:
-            execute(contents, args.loose, args.print)
+            execute(contents, args.loose, args.print, args.verbose)
 
     else:
         print("ERROR: no file")

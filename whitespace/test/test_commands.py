@@ -17,36 +17,56 @@ class TestCommands(unittest.TestCase):
     ######
     def test_read_num(self):
         # Setup
-        file = io.BytesIO(b"  \t 103\n")
+        file = io.StringIO("  \t 103\n")
         read_num = ReadNum(1)
         stack = array(WORD_TYPE)
         stack.append(98)
 
         # Run
-        ret = read_num.execute(Runtime(stack=stack, file_in=file))
+        runtime = Runtime(stack=stack, file_in=file)
+        ret = read_num.execute(runtime)
 
         # Assert
         self.assertEqual(ret, 1)
-        self.assertEqual(len(stack), 2)
-        self.assertEqual(stack[0], 98)
-        self.assertEqual(stack[1], 103)
+        self.assertEqual(len(stack), 0)
+        self.assertEqual(runtime.heap.read(98), 103)
+    
+    def test_read_num_throws(self):
+        # Setup
+        file = io.StringIO("  \t 103\n")
+        read_num = ReadNum(1)
+        stack = array(WORD_TYPE)
+
+        # Run/assert
+        runtime = Runtime(stack=stack, file_in=file)
+        self.assertRaises(StackError, lambda: read_num.execute(runtime))
     
 
     def test_read_char(self):
         # Setup
-        file = io.BytesIO(b"a")
+        file = io.StringIO("a")
         read_num = ReadChar(1)
         stack = array(WORD_TYPE)
         stack.append(98)
 
         # Run
-        ret = read_num.execute(Runtime(stack=stack, file_in=file))
+        runtime = Runtime(stack=stack, file_in=file)
+        ret = read_num.execute(runtime)
 
         # Assert
         self.assertEqual(ret, 1)
-        self.assertEqual(len(stack), 2)
-        self.assertEqual(stack[0], 98)
-        self.assertEqual(stack[1], 97)
+        self.assertEqual(len(stack), 0)
+        self.assertEqual(runtime.heap.read(98), 97)
+    
+    def test_read_char_throws(self):
+        # Setup
+        file = io.StringIO("  \t 103\n")
+        read_char = ReadChar(1)
+        stack = array(WORD_TYPE)
+
+        # Run/assert
+        runtime = Runtime(stack=stack, file_in=file)
+        self.assertRaises(StackError, lambda: read_char.execute(runtime))
     
     def test_out_num(self):
         # Setup

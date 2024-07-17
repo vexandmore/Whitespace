@@ -356,8 +356,14 @@ class ReadChar(Command):
         super().__init__(line, label)
 
     def execute(self, runtime: Runtime) -> int:
-        read_byte = int(runtime.file_in.read()[0])
-        runtime.stack.append(read_byte)
+        if len(runtime.stack) == 0:
+            raise StackError("Empty runtime.stack")
+        try:
+            # Read one char
+            read_byte = ord(runtime.file_in.read(1)[0])
+        except KeyboardInterrupt:
+            read_byte = 0
+        runtime.heap.write(runtime.stack.pop(), read_byte)
 
         return runtime.PC + 1
     
@@ -379,9 +385,15 @@ class ReadNum(Command):
         super().__init__(line, label)
 
     def execute(self, runtime: Runtime) -> int:
-        line = runtime.file_in.readline()
-        read_int = int(line)
-        runtime.stack.append(read_int)
+        if len(runtime.stack) == 0:
+            raise StackError("Empty runtime.stack")
+        try:
+            line = runtime.file_in.readline()
+            read_int = int(line)
+        except KeyboardInterrupt:
+            read_int = 0
+            
+        runtime.heap.write(runtime.stack.pop(), read_int)
 
         return runtime.PC + 1
     
