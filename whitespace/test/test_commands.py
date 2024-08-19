@@ -1,6 +1,7 @@
 from whitespace.Commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
 from whitespace.Commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap
 from whitespace.Commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
+from whitespace.Commands import Copy
 from whitespace.Constants_errors import WORD_TYPE, StackError
 from whitespace.Heap import Heap
 from whitespace.Runtime import Runtime
@@ -318,6 +319,37 @@ class TestCommands(unittest.TestCase):
         
         # Run and Assert
         self.assertRaises(StackError, lambda: mod.execute(Runtime(stack)))
+
+    def test_copy(self):
+        # Setup
+        file = io.StringIO("")
+        copy = Copy(1, 2) # Copy 3rd entry from end of the stack
+        stack = array(WORD_TYPE)
+        stack = list(range(10, 20)) # Start stack with 10, 11, ... 19
+        runtime = Runtime(stack)
+
+        # Run
+        ret = copy.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 1)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(runtime.stack), 11)
+        print(runtime)
+        self.assertEqual(runtime.stack[-1], 17)
+
+
+    def test_copy_throws(self):
+        # Setup
+        file = io.StringIO("")
+        copy = Copy(1, 10) # Copy 11th entry from end of the stack
+        stack = array(WORD_TYPE)
+        stack = list(range(10, 20)) # Start stack with 10, 11, ... 19
+        runtime = Runtime(stack)
+
+        # Run, assert
+        self.assertRaises(StackError, lambda: copy.execute(runtime))
+
 
     ################
     # Control Flow #

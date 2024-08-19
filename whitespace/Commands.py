@@ -169,6 +169,31 @@ class Discard(Command):
     def minified(self) -> str:
         return super().minified() + " \n\n"
     
+
+class Copy(Command):
+    def __init__(self, line:int, num: int, label: int = -1):
+        super().__init__(line, label)
+        self.num = num
+    
+    def execute(self, runtime: Runtime) -> int:
+        if len(runtime.stack) <= self.num:
+            raise StackError(f"Cannot copy {self.num}th num from stack, it is only {len(runtime.stack)} long")
+        runtime.stack.append(runtime.stack[-self.num - 1])
+
+        return runtime.PC + 1
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Copy:
+            return super().__eq__(value) and self.num == value.num
+        else:
+            return False
+    
+    def __repr__(self) -> str:
+        return f"Copy {self.num}th on line {self.line} " + self.label_repr()
+    
+    def minified(self) -> str:
+        return super().minified() + " \t " + self.encodeNumber(self.num)
+    
 # Copy and slide: not implemented yet
 
 ##############
