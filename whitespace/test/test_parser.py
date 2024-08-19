@@ -2,7 +2,7 @@ from whitespace.Parser import Parser
 from whitespace.Commands import Command, Push, End, OutChar, OutNum, ReadNum, ReadChar, Duplicate, Swap, Discard
 from whitespace.Commands import Plus, Minus, Times, IntDivide, Modulo, Write_Heap, Read_Heap
 from whitespace.Commands import Jump, CallSub, EndSub, JumpZero, JumpNegative
-from whitespace.Commands import Copy
+from whitespace.Commands import Copy, Slide
 import unittest
 
 
@@ -41,6 +41,7 @@ class TestParser(unittest.TestCase):
         self.run_test("[Space][LF][Tab]", [Swap(1)])
         self.run_test("[Space][LF][LF]", [Discard(1)])
         self.run_test("[Space][Tab][Space]Copy[Space]+[Tab][Space][Space][Space]8[LF]", [Copy(1, 8)])
+        self.run_test("[Space][Tab][LF]Slide[Space]+[Tab][Space][Space][Space]8[LF]", [Slide(1, 8)])
 
         
         self.run_test("[Tab][LF][Space][Space][Space][LF][Space]",

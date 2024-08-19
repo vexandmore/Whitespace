@@ -3,7 +3,7 @@ from whitespace.Commands import Command, End, Push, OutChar, OutNum, ReadChar, R
 from whitespace.Commands import Plus, Minus, Times, IntDivide, Modulo
 from whitespace.Commands import Read_Heap, Write_Heap
 from whitespace.Commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
-from whitespace.Commands import Copy
+from whitespace.Commands import Copy, Slide
 
 class Parser(Tokenizer):
     def __init__(self, text: str, detect_readable: bool):
@@ -64,6 +64,8 @@ class Parser(Tokenizer):
             lookahead = self.nextToken()
             if lookahead.type == TokenType.SPACE:
                 return Copy(lookahead.line, self.parseNumber(), self.get_label())
+            elif lookahead.type == TokenType.LINEFEED:
+                return Slide(lookahead.line, self.parseNumber(), self.get_label())
             else:
                 return None
         else:
