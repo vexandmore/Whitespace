@@ -193,7 +193,37 @@ class Copy(Command):
     
     def minified(self) -> str:
         return super().minified() + " \t " + self.encodeNumber(self.num)
+
+
+class Slide(Command):
+    def __init__(self, line:int, num: int, label: int = -1):
+        super().__init__(line, label)
+        self.num = num
     
+    def execute(self, runtime: Runtime) -> int:
+        # When slide n off the stack, need n+1 to be there since we keep the top element
+        if len(runtime.stack) <= self.num + 1:
+            raise StackError(f"Cannot slide {self.num} from stack, it is only {len(runtime.stack)} long")
+        old_stack = runtime.stack
+        runtime.stack = old_stack[0:len(runtime.stack) - self.num - 1]
+        # Add back last element
+        runtime.stack.append(old_stack[-1])
+
+        return runtime.PC + 1
+
+    def __eq__(self, value: object) -> bool:
+        if type(value) == Slide:
+            return super().__eq__(value) and self.num == value.num
+        else:
+            return False
+    
+    def __repr__(self) -> str:
+        return f"Slide {self.num} on line {self.line} " + self.label_repr()
+    
+    def minified(self) -> str:
+        return super().minified() + " \t\n" + self.encodeNumber(self.num)
+
+
 # Copy and slide: not implemented yet
 
 ##############

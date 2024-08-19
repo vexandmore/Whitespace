@@ -1,7 +1,7 @@
 from whitespace.Commands import Push, End, OutChar, OutNum, ReadChar, Plus, Minus, Times, IntDivide, Modulo
 from whitespace.Commands import ReadNum, Duplicate, Swap, Discard, Read_Heap, Write_Heap
 from whitespace.Commands import CallSub, EndSub, Jump, JumpZero, JumpNegative
-from whitespace.Commands import Copy
+from whitespace.Commands import Copy, Slide
 from whitespace.Constants_errors import WORD_TYPE, StackError
 from whitespace.Heap import Heap
 from whitespace.Runtime import Runtime
@@ -335,7 +335,6 @@ class TestCommands(unittest.TestCase):
         self.assertEqual(ret, 1)
         self.assertEqual(file.getvalue(), "")
         self.assertEqual(len(runtime.stack), 11)
-        print(runtime)
         self.assertEqual(runtime.stack[-1], 17)
 
 
@@ -343,6 +342,36 @@ class TestCommands(unittest.TestCase):
         # Setup
         file = io.StringIO("")
         copy = Copy(1, 10) # Copy 11th entry from end of the stack
+        stack = array(WORD_TYPE)
+        stack = list(range(10, 20)) # Start stack with 10, 11, ... 19
+        runtime = Runtime(stack)
+
+        # Run, assert
+        self.assertRaises(StackError, lambda: copy.execute(runtime))
+
+
+    def test_slide(self):
+        # Setup
+        file = io.StringIO("")
+        copy = Slide(1, 3) # Slide 3
+        stack = array(WORD_TYPE)
+        stack = list(range(10, 20)) # Start stack with 10, 11, ... 19
+        runtime = Runtime(stack)
+
+        # Run
+        ret = copy.execute(runtime)
+
+        # Assert
+        self.assertEqual(ret, 1)
+        self.assertEqual(file.getvalue(), "")
+        self.assertEqual(len(runtime.stack), 7)
+        self.assertEqual(runtime.stack, [10, 11, 12, 13, 14, 15, 19])
+
+
+    def test_slide_throws(self):
+        # Setup
+        file = io.StringIO("")
+        copy = Slide(1, 10) # Slide 10
         stack = array(WORD_TYPE)
         stack = list(range(10, 20)) # Start stack with 10, 11, ... 19
         runtime = Runtime(stack)
