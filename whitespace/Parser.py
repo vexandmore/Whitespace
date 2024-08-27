@@ -23,6 +23,8 @@ class Parser(Tokenizer):
         while c is not None:
             out.append(c)
             c = self.nextCommand()
+            if c is None:
+                raise Exception(f"Cannot parse command, on line {self.line} index {self.index}")
         return out
 
 

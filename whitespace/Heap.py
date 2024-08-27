@@ -12,7 +12,9 @@ class Heap:
         if address <= self.max_written:
             return self.arr[address]
         else:
-            raise HeapError(f"Cannot read from address {address}, heap size {len(self.arr)}")
+            # Double size, and recurse
+            self.arr.extend([0] * len(self.arr))
+            return self.read(address)
     
     def write(self, address: int, value: int) -> None:
         if address > self.max_written:
