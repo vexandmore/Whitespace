@@ -23,30 +23,35 @@ class Parser(Tokenizer):
         while c is not None:
             out.append(c)
             c = self.nextCommand()
-            if c is None:
-                raise Exception(f"Cannot parse command, on line {self.line} index {self.index}")
         return out
 
 
     def nextCommand(self) -> Command | None:
         lookahead = self.nextToken()
+        if lookahead.type == TokenType.EOF:
+            return None
+
+        token = None
         if lookahead.type == TokenType.SPACE:
-            return self.parseStackManip()
+            token = self.parseStackManip()
         elif lookahead.type == TokenType.LINEFEED:
-            return self.parseFlowControl()
+            token = self.parseFlowControl()
         elif lookahead.type == TokenType.TAB:
             lookahead = self.nextToken()
             if lookahead.type == TokenType.SPACE:
-                return self.parseArith()
+                token = self.parseArith()
             elif lookahead.type == TokenType.LINEFEED:
-                return self.parseIO()
+                token = self.parseIO()
             elif lookahead.type == TokenType.TAB:
-                return self.parseHeap()
-            else:
-                return None
+                token = self.parseHeap()
+
+        if token == None:
+            # In this case, the parse failed somewhere along the way.
+            # For now, this is detected here and we raise an error.
+            raise Exception(f"Cannot parse command, on line {self.line} index {self.index}")
         else:
-            return None
-                    
+            return token
+    
         
     def parseStackManip(self) -> Command | None:
         lookahead = self.nextToken()

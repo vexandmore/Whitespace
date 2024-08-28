@@ -1,6 +1,7 @@
 from whitespace.Runner import execute, minify
-import sys
-import os
+from whitespace.Compiler import compile
+import sys, os
+import subprocess
 from argparse import ArgumentParser, Namespace
 
 def parse_args() -> Namespace:
@@ -9,10 +10,11 @@ def parse_args() -> Namespace:
     parser.add_argument('-m', dest='minify', metavar="minify", action="store_const", const=True, default=False)
     parser.add_argument('-p', dest='print', metavar="print", action="store_const", const=True, default=False)
     parser.add_argument('-v', dest='verbose', metavar="verbose", action="store_const", const=True, default=False)
+    parser.add_argument('-c', dest='compile', metavar="compile", action="store_const", const=True, default=False)
     parser.add_argument('file', metavar='file', nargs=1, default=None, type=str)
     args = parser.parse_args(sys.argv[1:])
 
-    print(f"Loose mode: {args.loose}, minify: {args.minify}, file to interpret: {args.file[0]}\n")
+    print(f"Loose mode: {args.loose}, minify: {args.minify}, file to interpret: {args.file[0]}, compiling? {args.compile}\n")
 
     return args
 
@@ -30,6 +32,9 @@ def main() -> None:
             with open(out_filename, "w", encoding="utf-8") as f:
                 f.write(minified)
                 print("Wrote minified file to " + out_filename)
+        elif args.compile:
+            out_filename = os.path.splitext(filename)[0]
+            compile(contents, out_filename, args.loose, args.print, args.verbose)
         else:
             execute(contents, args.loose, args.print, args.verbose)
 

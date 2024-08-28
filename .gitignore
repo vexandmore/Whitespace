@@ -1,6 +1,17 @@
-# Custom
+######## Custom #########
+# Ignore all
+*
+# Unignore all with extensions
+!*.*
+# Unignore all dirs
+!*/
+
 # Minified ws files
-*.min.ws 
+*.min.ws
+# Intermediate compilation files
+*.s
+*.o
+##############################
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
