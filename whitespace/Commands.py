@@ -413,11 +413,14 @@ class ReadChar(Command):
     def execute(self, runtime: Runtime) -> int:
         if len(runtime.stack) == 0:
             raise StackError("Empty runtime.stack")
-        try:
-            # Read one char
-            read_byte = ord(runtime.file_in.read(1)[0])
-        except KeyboardInterrupt:
+        
+        # Read one char
+        read_result = runtime.file_in.read(1)
+        # If a Ctrl-D is input, that should be interpreted as a null
+        if len(read_result) == 0:
             read_byte = 0
+        else:
+            read_byte = ord(read_result[0])
         runtime.heap.write(runtime.stack.pop(), read_byte)
 
         return runtime.PC + 1
@@ -445,7 +448,7 @@ class ReadNum(Command):
         try:
             line = runtime.file_in.readline()
             read_int = int(line)
-        except KeyboardInterrupt:
+        except EOFError:
             read_int = 0
             
         runtime.heap.write(runtime.stack.pop(), read_int)

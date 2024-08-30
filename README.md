@@ -19,8 +19,8 @@ Readable mode is detected when at least one of [Space], [Tab], or [LF] is detect
 In Whitespace, there is no way to receive input other than stdin
 (and no way to output except stdout). This interpreter does not address this currently.
 In addition, some programs may expect to see a null (aka '\0')
-when input is done; to input this, enter ctrl-C when the program is waiting
-for input (if ctrl-c is entered at any another time, the program will quit).
+when input is done; to input this, enter ctrl-D when the program is waiting
+for input.
 
 ### Word Size
 Integers are twos complement 32-bit integers (stored in a python

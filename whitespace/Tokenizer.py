@@ -1,3 +1,4 @@
+from whitespace.colours import TerminalColors
 from enum import Enum
 
 
@@ -42,6 +43,12 @@ class Tokenizer():
         if detect_readable:
             self.readable_mode = text.count("[Space]") > 0 or text.count("[Tab]") > 0 or text.count("[LF]") > 0
         else:
+            # Still do the check, to issue a warning
+            if text.count("[Space]") > 0 or text.count("[Tab]") > 0 or text.count("[LF]") > 0:
+                print(TerminalColors.WARNING + 
+                      "WARNING: readable mode disabled, but at least one instance of [Space], [Tab], or [LF] detected." +
+                      TerminalColors.ENDC)
+ 
             self.readable_mode = False
 
     def returnNextToken(self):
