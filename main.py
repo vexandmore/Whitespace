@@ -11,6 +11,7 @@ def parse_args() -> Namespace:
     parser.add_argument('-p', dest='print', metavar="print", action="store_const", const=True, default=False)
     parser.add_argument('-v', dest='verbose', metavar="verbose", action="store_const", const=True, default=False)
     parser.add_argument('-c', dest='compile', metavar="compile", action="store_const", const=True, default=False)
+    parser.add_argument('-d', dest='debug', metavar="debug", action="store_const", const=True, default=False)
     parser.add_argument('file', metavar='file', nargs=1, default=None, type=str)
     args = parser.parse_args(sys.argv[1:])
 
@@ -36,7 +37,7 @@ def main() -> None:
             out_filename = os.path.splitext(filename)[0]
             compile(contents, out_filename, args.loose, args.print, args.verbose)
         else:
-            execute(contents, args.loose, args.print, args.verbose)
+            execute(contents, args.loose, args.print, args.verbose, args.debug)
 
     else:
         print("ERROR: no file")

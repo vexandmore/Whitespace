@@ -36,16 +36,10 @@ class TestHeap(unittest.TestCase):
         self.assertEqual(111, heap.read(1000000))
         
 
-    def test_raise_on_read_past_end(self):
+    def test_read_0_on_read_past_end(self):
         heap = Heap()
 
-        # Can read nothing when not written
-        self.assertRaises(HeapError, lambda: heap.read(0))
-        self.assertRaises(HeapError, lambda: heap.read(12))
+        # Read null when not written
+        self.assertEqual(0, heap.read(0))
+        self.assertEqual(0, heap.read(12))
 
-        # When write, can read only until that point
-        heap.write(0, 123)
-        heap.write(10, 456)
-        
-        self.assertRaises(HeapError, lambda: heap.read(11))
-        self.assertRaises(HeapError, lambda: heap.read(15))

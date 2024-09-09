@@ -32,7 +32,7 @@ is only designed for AMD64 (Intel/AMD 64-bit) Linux systems, and is not tested o
 any other platforms.
 
 # Usage
-main.py [-h] [-l] [-m] [-p] [-v] [-c] file
+main.py [-h] [-l] [-m] [-p] [-v] [-c] [-d] file
 
 ## Primary Actions
 Only one of these actions will be executed. By default, the file will be interpreted
@@ -55,6 +55,11 @@ in "readable mode" (see above).
 
 If `-v` is passed, every executed instruction will be printed
 out before it is executed (if the file is interpreted).
+
+If `-d` is passed, starts in debug mode. In this case, that means
+the interpreter will start in a step-by-step execution mode.
+Enter `ni` or `nexti` when prompted to run the next instruction.
+Currently under development.
 
 # Getting Started
 To run whitespace file (in either syntax):
