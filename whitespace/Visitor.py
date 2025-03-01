@@ -1,5 +1,5 @@
 from whitespace.Commands import Command, CallSub, Jump, JumpNegative, JumpZero
-from whitespace.Commands import Push, OutNum, OutChar
+from whitespace.Commands import Push, OutNum, OutChar, Discard
 from whitespace.Constants_errors import DuplicateLabels
 
 def visit_flow_control(prog: list[Command]) -> None:
@@ -36,6 +36,8 @@ def visit_asm_generation(prog: list[Command]) -> str:
             assembly += "  mov rsi, rsp      ; &top_of_stack,\n"
             assembly += "  mov rdx, 1        ; 1\n"
             assembly += "  syscall           ; );\n"
+        elif isinstance(command, Discard):
+            assembly += "  pop rax           ; pop off the top of the stack, into rax since we don't care where it goes (and we aren't storing rax anyhow) \n"
     
     # Add exit syscall
     assembly += "; Exit with return code 0\n"

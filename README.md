@@ -2,7 +2,7 @@
 This is a [Whitespace](https://esolangs.org/wiki/Whitespace) interpreter in Python.
 Currently, Whitespace 0.3 instructions are not implemented; will be done soon.
 Written as a personal exercise in Python project structures, unit testing, 
-and (soon TM) assembly code generation.
+and (in progress) assembly code generation.
 
 Python 3.10+ required for the type hints.
 
